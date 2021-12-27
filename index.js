@@ -3,11 +3,16 @@ import dotenv from "dotenv";
 import cors from "cors";
 import colors from "colors";
 
+import db from "./src/config/db.js";
+
 import coreRoutes from "./src/routes/coreRoutes.js";
 
 // initialization
 const app = express();
 dotenv.config();
+
+// database connection
+db();
 
 // middlewares
 app.use(express.json());
