@@ -6,6 +6,8 @@ import colors from "colors";
 import db from "./src/config/db.js";
 
 import coreRoutes from "./src/routes/coreRoutes.js";
+import userRoutes from "./src/routes/userRouters.js";
+
 import { errorHandler } from "./src/middlewares/errorMiddlewares.js";
 
 // initialization
@@ -27,6 +29,7 @@ const NODE_ENV = process.env.NODE_ENV;
 
 // routes
 app.use("/api", coreRoutes);
+app.use("/api/users", userRoutes);
 
 // error handler middleware
 app.use(errorHandler);

@@ -28,10 +28,6 @@ const UserSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    salt: {
-      type: String,
-      required: true,
-    },
     isAdmin: {
       type: Boolean,
       default: false,
@@ -41,5 +37,17 @@ const UserSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+UserSchema.methods.authenticate = async function (password) {
+  return await bcrypt.compareSync(password, this.password);
+};
+
+UserSchema.pre("save", async function (next) {
+  if (this.isModified) {
+    const hashPassword = await bcrypt.hashSync(this.password, 10);
+    this.password = hashPassword;
+  }
+  return next();
+});
 
 export default mongoose.model("User", UserSchema);
