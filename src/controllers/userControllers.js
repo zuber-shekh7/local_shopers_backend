@@ -1,5 +1,6 @@
 import User from "../models/UserModel.js";
 import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 
 const userLogin = asyncHandler(async (req, res) => {
@@ -15,7 +16,16 @@ const userLogin = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: email });
 
   if (user && (await user.authenticate(password))) {
-    return res.json(await User.findById(user._id).select("-password"));
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.SECRET,
+      { expiresIn: "30d" }
+    );
+
+    return res.json({
+      user: await User.findById(user._id).select("-password"),
+      token,
+    });
   }
 
   return res.status(400).json({
@@ -48,8 +58,9 @@ const userSignup = asyncHandler(async (req, res) => {
     password,
   });
 
+  res.status(201);
   return res.json({
-    user,
+    message: "Account Created Successfully",
   });
 });
 
