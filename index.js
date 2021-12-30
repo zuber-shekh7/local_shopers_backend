@@ -6,6 +6,7 @@ import colors from "colors";
 import db from "./src/config/db.js";
 
 import coreRoutes from "./src/routes/coreRoutes.js";
+import { errorHandler } from "./src/middlewares/errorMiddlewares.js";
 
 // initialization
 const app = express();
@@ -26,6 +27,9 @@ const NODE_ENV = process.env.NODE_ENV;
 
 // routes
 app.use("/api", coreRoutes);
+
+// error handler middleware
+app.use(errorHandler);
 
 // listen
 app.listen(PORT, () => {
