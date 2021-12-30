@@ -64,4 +64,17 @@ const userSignup = asyncHandler(async (req, res) => {
   });
 });
 
-export { userLogin, userSignup };
+const getUserProfile = asyncHandler(async (req, res) => {
+  const id = req.user.id;
+  const user = await User.findById(id).select("-password");
+
+  if (user) {
+    return res.json({
+      user,
+    });
+  }
+
+  return res.status(400).json({ message: "Invalid user id" });
+});
+
+export { userLogin, userSignup, getUserProfile };
