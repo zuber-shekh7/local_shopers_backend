@@ -37,10 +37,6 @@ const UserSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    isSeller: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,
