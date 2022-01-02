@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 
-import User from "../models/UserModel.js";
+import Seller from "../models/SellerModel.js";
 
 const sellerLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -13,17 +13,17 @@ const sellerLogin = asyncHandler(async (req, res) => {
   }
 
   const { email, password } = req.body;
-  const user = await User.findOne({ email: email, isSeller: true });
+  const seller = await Seller.findOne({ email: email, isSeller: true });
 
-  if (user && (await user.authenticate(password))) {
+  if (seller && (await seller.authenticate(password))) {
     const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin, isSeller: user.isSeller },
+      { id: seller._id, isAdmin: seller.isAdmin },
       process.env.SECRET,
       { expiresIn: "30d" }
     );
 
     return res.json({
-      user: await User.findById(user._id).select("-password"),
+      seller: await Seller.findById(seller._id).select("-password"),
       token,
     });
   }
@@ -33,4 +33,36 @@ const sellerLogin = asyncHandler(async (req, res) => {
   });
 });
 
-export { sellerLogin };
+const sellerSignup = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const { firstName, lastName, email, password } = req.body;
+
+  const existSeller = await Seller.findOne({ email: email });
+
+  if (existSeller) {
+    res.status(400);
+    return res.json({
+      message: `Seller with email ${email} is already exists`,
+    });
+  }
+
+  await Seller.create({
+    firstName,
+    lastName,
+    email,
+    password,
+  });
+
+  res.status(201);
+  return res.json({
+    message: "Account Created Successfully",
+  });
+});
+
+export { sellerLogin, sellerSignup };
