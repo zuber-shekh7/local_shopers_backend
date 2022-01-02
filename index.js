@@ -7,6 +7,7 @@ import db from "./src/config/db.js";
 
 import coreRoutes from "./src/routes/coreRoutes.js";
 import userRoutes from "./src/routes/userRouters.js";
+import sellerRoutes from "./src/routes/sellerRouter.js";
 
 import { errorHandler } from "./src/middlewares/errorMiddlewares.js";
 
@@ -15,7 +16,12 @@ const app = express();
 dotenv.config();
 
 // database connection
-db();
+try {
+  await db();
+} catch (err) {
+  console.err(err.red.bold);
+  process.exit(1);
+}
 
 // middlewares
 app.use(express.json());
@@ -30,6 +36,7 @@ const NODE_ENV = process.env.NODE_ENV;
 // routes
 app.use("/api", coreRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/sellers", sellerRoutes);
 
 // error handler middleware
 app.use(errorHandler);
