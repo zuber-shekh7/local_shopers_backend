@@ -1,6 +1,14 @@
 import express from "express";
-import { sellerLogin, sellerSignup } from "../controllers/sellerControllers.js";
+import {
+  createBusiness,
+  sellerLogin,
+  sellerSignup,
+} from "../controllers/sellerControllers.js";
 import { body } from "express-validator";
+import {
+  allowSellerOnly,
+  authenticateSeller,
+} from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
 
@@ -24,4 +32,14 @@ router.post(
   sellerSignup
 );
 
+router.post(
+  "/business/new",
+  [
+    authenticateSeller,
+    allowSellerOnly,
+    body("name").notEmpty().isString(),
+    body("description").notEmpty().isString(),
+  ],
+  createBusiness
+);
 export default router;

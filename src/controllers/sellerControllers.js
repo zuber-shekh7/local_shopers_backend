@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
-
+import Business from "../models/BusinessModel.js";
 import Seller from "../models/SellerModel.js";
 
 const sellerLogin = asyncHandler(async (req, res) => {
@@ -17,7 +17,7 @@ const sellerLogin = asyncHandler(async (req, res) => {
 
   if (seller && (await seller.authenticate(password))) {
     const token = jwt.sign(
-      { id: seller._id, isAdmin: seller.isAdmin },
+      { id: seller._id, isSeller: true },
       process.env.SECRET,
       { expiresIn: "30d" }
     );
@@ -65,4 +65,37 @@ const sellerSignup = asyncHandler(async (req, res) => {
   });
 });
 
-export { sellerLogin, sellerSignup };
+const createBusiness = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const { name, description } = req.body;
+
+  const { id } = req.seller;
+
+  const seller = await Seller.findById(id);
+
+  if (seller && seller.business) {
+    res.status(400);
+    return res.json({
+      message: "Business is already exists",
+    });
+  }
+
+  const business = await Business.create({
+    name,
+    description,
+  });
+
+  seller.business = business._id;
+  await seller.save();
+
+  return res.status(500).json({
+    message: "Business created successfully.",
+  });
+});
+export { sellerLogin, sellerSignup, createBusiness };
