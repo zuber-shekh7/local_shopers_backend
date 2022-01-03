@@ -25,6 +25,10 @@ const SellerSchema = mongoose.Schema(
       unique: true,
       sparse: true,
     },
+    business: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Business",
+    },
     password: {
       type: String,
       required: true,
