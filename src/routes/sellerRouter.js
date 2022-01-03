@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createBusiness,
+  getSellerProfile,
   sellerLogin,
   sellerSignup,
 } from "../controllers/sellerControllers.js";
@@ -42,4 +43,6 @@ router.post(
   ],
   createBusiness
 );
+
+router.get("/profile", [authenticateSeller, allowSellerOnly], getSellerProfile);
 export default router;

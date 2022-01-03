@@ -98,4 +98,28 @@ const createBusiness = asyncHandler(async (req, res) => {
     message: "Business created successfully.",
   });
 });
-export { sellerLogin, sellerSignup, createBusiness };
+
+const getSellerProfile = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const { id } = req.seller;
+
+  const seller = await Seller.findById(id).populate("business");
+
+  if (seller) {
+    return res.json({
+      seller,
+    });
+  }
+
+  return res.status(400).json({
+    message: "Invalid seller id",
+  });
+});
+
+export { sellerLogin, sellerSignup, createBusiness, getSellerProfile };
