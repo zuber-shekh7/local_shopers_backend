@@ -8,6 +8,7 @@ import db from "./src/config/db.js";
 import coreRoutes from "./src/routes/coreRoutes.js";
 import userRoutes from "./src/routes/userRouters.js";
 import sellerRoutes from "./src/routes/sellerRouter.js";
+import adminRoutes from "./src/routes/adminRoutes.js";
 
 import { errorHandler } from "./src/middlewares/errorMiddlewares.js";
 
@@ -37,6 +38,7 @@ const NODE_ENV = process.env.NODE_ENV;
 app.use("/api", coreRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/sellers", sellerRoutes);
+app.use("/api/admin", adminRoutes);
 
 // error handler middleware
 app.use(errorHandler);
