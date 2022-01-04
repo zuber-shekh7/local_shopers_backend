@@ -109,7 +109,9 @@ const getSellerProfile = asyncHandler(async (req, res) => {
 
   const { id } = req.seller;
 
-  const seller = await Seller.findById(id).populate("business");
+  const seller = await Seller.findById(id)
+    .populate("business")
+    .select("-password");
 
   if (seller) {
     return res.json({
