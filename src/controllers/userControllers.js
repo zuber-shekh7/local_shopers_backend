@@ -78,4 +78,34 @@ const getUserProfile = asyncHandler(async (req, res) => {
   return res.status(400).json({ message: "Invalid user id" });
 });
 
-export { userLogin, userSignup, getUserProfile };
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const { firstName, lastName, email, mobile } = req.body;
+
+  const { id } = req.user;
+
+  const user = await User.findById(id).select("-password");
+
+  if (user) {
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    user.mobile = mobile;
+
+    await user.save();
+
+    return res.json({
+      message: "User profile updated",
+    });
+  }
+
+  return res.status(400).json({ message: "Invalid user id" });
+});
+
+export { userLogin, userSignup, getUserProfile, updateUserProfile };

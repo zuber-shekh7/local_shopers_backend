@@ -3,6 +3,7 @@ import { body } from "express-validator";
 
 import {
   getUserProfile,
+  updateUserProfile,
   userLogin,
   userSignup,
 } from "../controllers/userControllers.js";
@@ -31,4 +32,17 @@ router.post(
 );
 
 router.get("/profile", [authenticate], getUserProfile);
+
+router.put(
+  "/profile",
+  [
+    authenticate,
+    body("firstName").not().isEmpty().isString(),
+    body("lastName").not().isEmpty().isString(),
+    body("email").not().isEmpty().isEmail().normalizeEmail(),
+    body("mobile").not().isEmpty().isString(),
+  ],
+  updateUserProfile
+);
+
 export default router;
