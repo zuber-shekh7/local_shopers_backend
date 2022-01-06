@@ -1,11 +1,12 @@
 import express from "express";
 import {
   createBusiness,
+  getBusinessDetails,
   getSellerProfile,
   sellerLogin,
   sellerSignup,
 } from "../controllers/sellerControllers.js";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import {
   allowSellerOnly,
   authenticateSeller,
@@ -42,6 +43,12 @@ router.post(
     body("description").notEmpty().isString(),
   ],
   createBusiness
+);
+
+router.get(
+  "/business/:id",
+  [authenticateSeller, allowSellerOnly],
+  getBusinessDetails
 );
 
 router.get("/profile", [authenticateSeller, allowSellerOnly], getSellerProfile);
