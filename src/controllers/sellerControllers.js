@@ -94,7 +94,7 @@ const createBusiness = asyncHandler(async (req, res) => {
   seller.business = business._id;
   await seller.save();
 
-  return res.status(500).json({
+  return res.status(201).json({
     message: "Business created successfully.",
   });
 });
