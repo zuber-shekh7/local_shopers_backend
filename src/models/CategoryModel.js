@@ -7,6 +7,12 @@ const CategorySchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
   },
   {
     timestamps: true,
