@@ -9,6 +9,7 @@ import coreRoutes from "./src/routes/coreRoutes.js";
 import userRoutes from "./src/routes/userRouters.js";
 import sellerRoutes from "./src/routes/sellerRouter.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
+import categoryRoutes from "./src/routes/categoriesRoutes.js";
 
 import { errorHandler } from "./src/middlewares/errorMiddlewares.js";
 
@@ -39,6 +40,7 @@ app.use("/api", coreRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/sellers", sellerRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/business/categories", categoryRoutes);
 
 // error handler middleware
 app.use(errorHandler);
