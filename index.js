@@ -14,6 +14,7 @@ import productRoutes from "./src/routes/productRoutes.js";
 import businessRoutes from "./src/routes/businessRoutes.js";
 
 import { errorHandler } from "./src/middlewares/errorMiddlewares.js";
+import notFoundMiddleware from "./src/middlewares/notFoundMiddleware.js";
 
 // initialization
 const app = express();
@@ -45,6 +46,9 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/business", businessRoutes);
 app.use("/api/business/categories", categoryRoutes);
 app.use("/api/business/products", productRoutes);
+
+// not found middleware
+app.use(notFoundMiddleware);
 
 // error handler middleware
 app.use(errorHandler);
