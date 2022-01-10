@@ -41,6 +41,7 @@ router.post(
     allowSellerOnly,
     body("name").notEmpty().isString(),
     body("description").notEmpty().isString(),
+    body("business_category_id").exists().notEmpty().isString(),
   ],
   createBusiness
 );
