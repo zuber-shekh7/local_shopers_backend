@@ -1,6 +1,9 @@
 import express from "express";
 import { body } from "express-validator";
-import { createCategory } from "../controllers/categoryControllers.js";
+import {
+  createCategory,
+  updateCategory,
+} from "../controllers/categoryControllers.js";
 import {
   authenticateSeller,
   allowSellerOnly,
@@ -17,6 +20,17 @@ router.post(
     body("name").exists().notEmpty().isString(),
   ],
   createCategory
+);
+
+router.put(
+  "",
+  [
+    authenticateSeller,
+    allowSellerOnly,
+    body("category_id").exists().notEmpty().isString(),
+    body("name").isString(),
+  ],
+  updateCategory
 );
 
 export default router;

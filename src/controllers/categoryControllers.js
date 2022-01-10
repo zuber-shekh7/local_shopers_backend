@@ -2,7 +2,6 @@ import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import Business from "../models/BusinessModel.js";
 import Category from "../models/CategoryModel.js";
-import Seller from "../models/SellerModel.js";
 
 const createCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -35,4 +34,31 @@ const createCategory = asyncHandler(async (req, res) => {
   });
 });
 
-export { createCategory };
+const updateCategory = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const category_id = req.body.category_id;
+
+  const category = await Category.findById(category_id);
+
+  if (category) {
+    const name = req.body.name || category.name;
+
+    category.name = name;
+
+    await category.save();
+
+    return res.status(201).json({ category });
+  }
+
+  return res.status(400).json({
+    messsage: "Invalid category id",
+  });
+});
+
+export { createCategory, updateCategory };
