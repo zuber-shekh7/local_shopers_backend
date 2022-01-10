@@ -34,6 +34,27 @@ const createCategory = asyncHandler(async (req, res) => {
   });
 });
 
+const getCategory = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const category_id = req.body.category_id;
+
+  const category = await Category.findById(category_id).populate("products");
+
+  if (category) {
+    return res.status(201).json({ category });
+  }
+
+  return res.status(400).json({
+    messsage: "Invalid category id",
+  });
+});
+
 const updateCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
@@ -61,4 +82,4 @@ const updateCategory = asyncHandler(async (req, res) => {
   });
 });
 
-export { createCategory, updateCategory };
+export { createCategory, updateCategory, getCategory };

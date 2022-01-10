@@ -2,6 +2,7 @@ import express from "express";
 import { body } from "express-validator";
 import {
   createCategory,
+  getCategory,
   updateCategory,
 } from "../controllers/categoryControllers.js";
 import {
@@ -10,6 +11,16 @@ import {
 } from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
+
+router.get(
+  "",
+  [
+    authenticateSeller,
+    allowSellerOnly,
+    body("category_id").exists().notEmpty().isString(),
+  ],
+  getCategory
+);
 
 router.post(
   "/new",
