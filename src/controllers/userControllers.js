@@ -101,7 +101,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     await user.save();
 
     return res.json({
-      message: "User profile updated",
+      user,
     });
   }
 
