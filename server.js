@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import colors from "colors";
+import morgan from "morgan";
 
 import db from "./src/config/db.js";
 
@@ -29,6 +30,9 @@ try {
 }
 
 // middlewares
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
