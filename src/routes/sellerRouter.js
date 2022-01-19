@@ -3,6 +3,7 @@ import {
   createBusiness,
   getBusinessDetails,
   getSellerProfile,
+  sellerGoogleLogin,
   sellerLogin,
   sellerSignup,
 } from "../controllers/sellerControllers.js";
@@ -53,4 +54,10 @@ router.get(
 );
 
 router.get("/profile", [authenticateSeller, allowSellerOnly], getSellerProfile);
+
+router.post(
+  "/login/google",
+  [body("token").exists().notEmpty().isString()],
+  sellerGoogleLogin
+);
 export default router;
