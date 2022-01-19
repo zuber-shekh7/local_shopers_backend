@@ -61,7 +61,7 @@ const userSignup = asyncHandler(async (req, res) => {
 
   res.status(201);
   return res.json({
-    message: "Account Created Successfully",
+    user: await User.findById(user._id).select("-password"),
   });
 });
 
