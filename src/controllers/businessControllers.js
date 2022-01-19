@@ -20,6 +20,15 @@ const createBusinessCategory = asyncHandler(async (req, res) => {
 
   const { name, description } = req.body;
 
+  const existCategory = await BusinessCategory.findOne({ name: name });
+
+  if (existCategory) {
+    res.status(400);
+    return res.json({
+      message: "Business Category is already exists",
+    });
+  }
+
   const category = await BusinessCategory.create({
     name,
     description,
