@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
+import BusinessCategory from "../models/BusinessCategoryModel.js";
 import Business from "../models/BusinessModel.js";
 import Seller from "../models/SellerModel.js";
 
@@ -73,7 +74,7 @@ const createBusiness = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const { name, description } = req.body;
+  const { name, description, business_category_id } = req.body;
 
   const { id } = req.seller;
 
@@ -86,16 +87,25 @@ const createBusiness = asyncHandler(async (req, res) => {
     });
   }
 
+  const category = await BusinessCategory.findById(business_category_id);
+
+  if (!category) {
+    return res.status(400).json({
+      message: "Invalid Business Category id",
+    });
+  }
+
   const business = await Business.create({
     name,
     description,
+    category,
   });
 
   seller.business = business._id;
   await seller.save();
 
   return res.status(201).json({
-    message: "Business created successfully.",
+    business: await Business.findById(business._id).populate("category"),
   });
 });
 

@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import colors from "colors";
+import morgan from "morgan";
 
 import db from "./src/config/db.js";
 
@@ -9,8 +10,12 @@ import coreRoutes from "./src/routes/coreRoutes.js";
 import userRoutes from "./src/routes/userRouters.js";
 import sellerRoutes from "./src/routes/sellerRouter.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
+import categoryRoutes from "./src/routes/categoriesRoutes.js";
+import productRoutes from "./src/routes/productRoutes.js";
+import businessRoutes from "./src/routes/businessRoutes.js";
 
 import { errorHandler } from "./src/middlewares/errorMiddlewares.js";
+import notFoundMiddleware from "./src/middlewares/notFoundMiddleware.js";
 
 // initialization
 const app = express();
@@ -25,6 +30,9 @@ try {
 }
 
 // middlewares
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -39,6 +47,12 @@ app.use("/api", coreRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/sellers", sellerRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/business", businessRoutes);
+app.use("/api/business/categories", categoryRoutes);
+app.use("/api/business/products", productRoutes);
+
+// not found middleware
+app.use(notFoundMiddleware);
 
 // error handler middleware
 app.use(errorHandler);

@@ -62,7 +62,7 @@ const userSignup = asyncHandler(async (req, res) => {
 
   res.status(201);
   return res.json({
-    message: "Account Created Successfully",
+    user: await User.findById(user._id).select("-password"),
   });
 });
 
@@ -102,7 +102,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     await user.save();
 
     return res.json({
-      message: "User profile updated",
+      user,
     });
   }
 

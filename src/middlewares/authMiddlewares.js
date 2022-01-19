@@ -38,6 +38,18 @@ const authenticateSeller = (req, res, next) => {
   return next();
 };
 
+const allowAdminOnly = (req, res, next) => {
+  const user = req.user;
+
+  if (user && user.isAdmin) {
+    return next();
+  }
+
+  return res.status(401).json({
+    message: "You are not authorised to access.",
+  });
+};
+
 const allowSellerOnly = (req, res, next) => {
   const seller = req.seller;
 
@@ -50,4 +62,4 @@ const allowSellerOnly = (req, res, next) => {
   });
 };
 
-export { authenticate, authenticateSeller, allowSellerOnly };
+export { authenticate, authenticateSeller, allowSellerOnly, allowAdminOnly };
