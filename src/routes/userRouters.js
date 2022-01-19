@@ -4,6 +4,7 @@ import { body } from "express-validator";
 import {
   getUserProfile,
   updateUserProfile,
+  userGoogleLogin,
   userLogin,
   userSignup,
 } from "../controllers/userControllers.js";
@@ -43,6 +44,12 @@ router.put(
     body("mobile").not().isEmpty().isString(),
   ],
   updateUserProfile
+);
+
+router.post(
+  "/login/google",
+  [body("token").exists().notEmpty().isString()],
+  userGoogleLogin
 );
 
 export default router;
