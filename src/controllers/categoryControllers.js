@@ -3,6 +3,26 @@ import { validationResult } from "express-validator";
 import Business from "../models/BusinessModel.js";
 import Category from "../models/CategoryModel.js";
 
+const getCategories = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+  const business_id = req.body.business_id;
+
+  const business = await Business.findById(business_id).populate("categories");
+
+  if (business) {
+    return res.status(201).json({ categories: business.categories });
+  }
+
+  return res.status(400).json({
+    messsage: "Invalid business id",
+  });
+});
+
 const createCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
@@ -82,4 +102,4 @@ const updateCategory = asyncHandler(async (req, res) => {
   });
 });
 
-export { createCategory, updateCategory, getCategory };
+export { getCategories, createCategory, updateCategory, getCategory };

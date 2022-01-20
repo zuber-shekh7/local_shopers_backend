@@ -2,6 +2,7 @@ import express from "express";
 import { body } from "express-validator";
 import {
   createCategory,
+  getCategories,
   getCategory,
   updateCategory,
 } from "../controllers/categoryControllers.js";
@@ -14,6 +15,16 @@ const router = express.Router();
 
 router.get(
   "",
+  [
+    authenticateSeller,
+    allowSellerOnly,
+    body("business_id").exists().notEmpty().isString(),
+  ],
+  getCategories
+);
+
+router.get(
+  "/detail",
   [
     authenticateSeller,
     allowSellerOnly,
