@@ -63,12 +63,12 @@ const getCategory = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const category_id = req.body.category_id;
+  const category_id = req.params.category_id;
 
   const category = await Category.findById(category_id).populate("products");
 
   if (category) {
-    return res.status(201).json({ category });
+    return res.status(200).json({ category });
   }
 
   return res.status(400).json({
