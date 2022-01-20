@@ -10,7 +10,8 @@ const getCategories = asyncHandler(async (req, res) => {
     res.status(400);
     return res.json({ errors: errors.array() });
   }
-  const business_id = req.body.business_id;
+
+  const business_id = req.query.business_id;
 
   const business = await Business.findById(business_id).populate("categories");
 

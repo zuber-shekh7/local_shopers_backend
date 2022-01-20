@@ -1,5 +1,5 @@
 import express from "express";
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 import {
   createCategory,
   getCategories,
@@ -13,22 +13,14 @@ import {
 
 const router = express.Router();
 
-router.get(
-  "",
-  [
-    authenticateSeller,
-    allowSellerOnly,
-    body("business_id").exists().notEmpty().isString(),
-  ],
-  getCategories
-);
+router.get("", [authenticateSeller, allowSellerOnly], getCategories);
 
 router.get(
   "/detail",
   [
     authenticateSeller,
     allowSellerOnly,
-    body("category_id").exists().notEmpty().isString(),
+    query("category_id").exists().notEmpty().isString(),
   ],
   getCategory
 );
