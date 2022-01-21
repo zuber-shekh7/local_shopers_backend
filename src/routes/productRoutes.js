@@ -1,6 +1,9 @@
 import express from "express";
-import { body } from "express-validator";
-import { createProduct } from "../controllers/productControllers.js";
+import { body, param } from "express-validator";
+import {
+  createProduct,
+  getProduct,
+} from "../controllers/productControllers.js";
 import {
   allowSellerOnly,
   authenticateSeller,
@@ -21,4 +24,13 @@ router.post(
   createProduct
 );
 
+router.get(
+  "/:product_id",
+  [
+    authenticateSeller,
+    allowSellerOnly,
+    param("product_id").exists().notEmpty().isString(),
+  ],
+  getProduct
+);
 export default router;

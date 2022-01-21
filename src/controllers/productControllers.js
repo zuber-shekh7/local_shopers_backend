@@ -36,4 +36,25 @@ const createProduct = asyncHandler(async (req, res) => {
   });
 });
 
-export { createProduct };
+const getProduct = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const product_id = req.params.product_id;
+
+  const product = await Product.findById(product_id);
+
+  if (product) {
+    return res.status(200).json({ product });
+  }
+
+  return res.state(400).json({
+    message: "Invalid product id",
+  });
+});
+
+export { createProduct, getProduct };
