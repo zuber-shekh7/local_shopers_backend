@@ -31,7 +31,7 @@ const createProduct = asyncHandler(async (req, res) => {
     return res.status(201).json({ product });
   }
 
-  return res.state(400).json({
+  return res.status(400).json({
     message: "Invalid category id",
   });
 });
@@ -52,7 +52,7 @@ const getProduct = asyncHandler(async (req, res) => {
     return res.status(200).json({ product });
   }
 
-  return res.state(400).json({
+  return res.status(400).json({
     message: "Invalid product id",
   });
 });
@@ -85,9 +85,32 @@ const editProduct = asyncHandler(async (req, res) => {
     return res.status(200).json({ product });
   }
 
-  return res.state(400).json({
+  return res.status(400).json({
     message: "Invalid product id",
   });
 });
 
-export { createProduct, getProduct, editProduct };
+const deleteProduct = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const product_id = req.params.product_id;
+
+  const product = await Product.findByIdAndDelete(product_id);
+
+  if (product) {
+    return res.status(200).json({
+      message: "Product deleted successfully",
+    });
+  }
+
+  return res.status(400).json({
+    message: "Invalid product id",
+  });
+});
+
+export { createProduct, getProduct, editProduct, deleteProduct };
