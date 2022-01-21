@@ -3,8 +3,13 @@ import { body } from "express-validator";
 import {
   createBusinessCategory,
   getBusinessCategories,
+  updateBusiness,
 } from "../controllers/businessControllers.js";
-import { authenticate } from "../middlewares/authMiddlewares.js";
+import {
+  allowSellerOnly,
+  authenticate,
+  authenticateSeller,
+} from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
 
@@ -18,6 +23,11 @@ router.post(
   createBusinessCategory
 );
 
+router.put(
+  "/:business_id/edit",
+  [authenticateSeller, allowSellerOnly],
+  updateBusiness
+);
 router.get("/business-categories", [authenticate], getBusinessCategories);
 
 export default router;
