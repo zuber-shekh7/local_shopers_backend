@@ -2,9 +2,11 @@ import express from "express";
 import { body } from "express-validator";
 import {
   createBusinessCategory,
+  getBusiness,
   getBusinessCategories,
   updateBusiness,
 } from "../controllers/businessControllers.js";
+import { getBusinessDetails } from "../controllers/sellerControllers.js";
 import {
   allowSellerOnly,
   authenticate,
@@ -12,6 +14,8 @@ import {
 } from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
+
+router.get("/:business_id", getBusiness);
 
 router.post(
   "/business-categories/new",

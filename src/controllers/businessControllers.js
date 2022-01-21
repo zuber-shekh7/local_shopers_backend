@@ -11,6 +11,32 @@ const getBusinessCategories = asyncHandler(async (req, res) => {
   });
 });
 
+const getBusiness = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const business_id = req.params.business_id;
+
+  const business = await Business.findById(business_id).populate([
+    "category",
+    "categories",
+  ]);
+
+  if (business) {
+    return res.json({
+      business,
+    });
+  }
+
+  return res.status(400).json({
+    message: "Invalid business id",
+  });
+});
+
 const createBusinessCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
@@ -71,4 +97,9 @@ const updateBusiness = asyncHandler(async (req, res) => {
   });
 });
 
-export { createBusinessCategory, getBusinessCategories, updateBusiness };
+export {
+  getBusiness,
+  createBusinessCategory,
+  getBusinessCategories,
+  updateBusiness,
+};
