@@ -22,6 +22,7 @@ router.post(
     body("name").exists().notEmpty().isString(),
     body("description").exists().notEmpty().isString(),
     body("price").exists().notEmpty().isDecimal(),
+    body("quantity").exists().notEmpty().isDecimal(),
   ],
   createProduct
 );

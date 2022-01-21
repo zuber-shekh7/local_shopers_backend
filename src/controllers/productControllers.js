@@ -16,12 +16,13 @@ const createProduct = asyncHandler(async (req, res) => {
   const category = await Category.findById(category_id);
 
   if (category) {
-    const { name, description, price } = req.body;
+    const { name, description, price, quantity } = req.body;
 
     const product = await Product.create({
       name,
       description,
       price,
+      quantity,
     });
 
     category.products.push(product);
