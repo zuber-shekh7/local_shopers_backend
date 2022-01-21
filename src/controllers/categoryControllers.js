@@ -103,4 +103,31 @@ const updateCategory = asyncHandler(async (req, res) => {
   });
 });
 
-export { getCategories, createCategory, updateCategory, getCategory };
+const deleteCategory = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const category_id = req.params.category_id;
+
+  const category = await Category.findByIdAndDelete(category_id);
+
+  if (category) {
+    return res.status(200).json({ message: "Category Deleted Successfully" });
+  }
+
+  return res.status(400).json({
+    messsage: "Invalid category id",
+  });
+});
+
+export {
+  getCategories,
+  createCategory,
+  updateCategory,
+  getCategory,
+  deleteCategory,
+};

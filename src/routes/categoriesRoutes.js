@@ -2,6 +2,7 @@ import express from "express";
 import { body, query, param } from "express-validator";
 import {
   createCategory,
+  deleteCategory,
   getCategories,
   getCategory,
   updateCategory,
@@ -42,6 +43,16 @@ router.post(
     body("name").exists().notEmpty().isString(),
   ],
   createCategory
+);
+
+router.delete(
+  "/:category_id",
+  [
+    authenticateSeller,
+    allowSellerOnly,
+    param("category_id").exists().notEmpty().isString(),
+  ],
+  deleteCategory
 );
 
 router.put(
