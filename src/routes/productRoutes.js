@@ -2,6 +2,7 @@ import express from "express";
 import { body, param } from "express-validator";
 import {
   createProduct,
+  editProduct,
   getProduct,
 } from "../controllers/productControllers.js";
 import {
@@ -33,4 +34,15 @@ router.get(
   ],
   getProduct
 );
+
+router.put(
+  "/:product_id/edit",
+  [
+    authenticateSeller,
+    allowSellerOnly,
+    param("product_id").exists().notEmpty().isString(),
+  ],
+  editProduct
+);
+
 export default router;

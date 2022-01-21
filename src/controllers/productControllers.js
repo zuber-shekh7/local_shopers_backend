@@ -57,4 +57,37 @@ const getProduct = asyncHandler(async (req, res) => {
   });
 });
 
-export { createProduct, getProduct };
+const editProduct = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const product_id = req.params.product_id;
+
+  const product = await Product.findById(product_id);
+
+  if (product) {
+    const name = req.body.name || product.name;
+    const description = req.body.description || product.description;
+    const price = req.body.price || product.price;
+    const quantity = req.body.quantity || product.quantity;
+
+    product.name = name;
+    product.description = description;
+    product.quantity = quantity;
+    product.price = price;
+
+    await product.save();
+
+    return res.status(200).json({ product });
+  }
+
+  return res.state(400).json({
+    message: "Invalid product id",
+  });
+});
+
+export { createProduct, getProduct, editProduct };
