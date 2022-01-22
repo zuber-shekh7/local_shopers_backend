@@ -35,14 +35,19 @@ router.post(
   createCategory
 );
 
-router.put(
-  "",
+router.get(
+  "/:category_id",
   [
     authenticateSeller,
     allowSellerOnly,
-    body("category_id").exists().notEmpty().isString(),
-    body("name").isString(),
+    param("category_id").exists().notEmpty().isString(),
   ],
+  getCategory
+);
+
+router.put(
+  "/:category_id",
+  [authenticateSeller, allowSellerOnly],
   updateCategory
 );
 
@@ -56,13 +61,4 @@ router.delete(
   deleteCategory
 );
 
-router.get(
-  "/:category_id",
-  [
-    authenticateSeller,
-    allowSellerOnly,
-    param("category_id").exists().notEmpty().isString(),
-  ],
-  getCategory
-);
 export default router;
