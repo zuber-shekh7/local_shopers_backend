@@ -28,7 +28,7 @@ router.post(
   [
     body("firstName").notEmpty().isString(),
     body("lastName").notEmpty().isString(),
-    body("email").notEmpty().isEmail().normalizeEmail(),
+    body("email").notEmpty().isEmail(),
     body("password").notEmpty().isString(),
   ],
   sellerSignup
@@ -41,6 +41,7 @@ router.post(
 );
 
 router.get("/:seller_id", [authenticateSeller, allowSellerOnly], getSeller);
+
 router.put("/:seller_id", [authenticateSeller, allowSellerOnly], updateSeller);
 
 export default router;
