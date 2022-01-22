@@ -26,7 +26,7 @@ router.post(
 );
 
 router.put(
-  "/:business_id/edit",
+  "/:business_id",
   [authenticateSeller, allowSellerOnly],
   updateBusiness
 );
