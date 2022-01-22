@@ -15,7 +15,7 @@ const router = express.Router();
 router.post(
   "/login",
   [
-    body("email").not().isEmpty().isEmail().normalizeEmail(),
+    body("email").not().isEmpty().isEmail(),
     body("password").not().isEmpty().isString(),
   ],
   userLogin
@@ -26,7 +26,7 @@ router.post(
   [
     body("firstName").not().isEmpty().isString(),
     body("lastName").not().isEmpty().isString(),
-    body("email").not().isEmpty().isEmail().normalizeEmail(),
+    body("email").not().isEmpty().isEmail(),
     body("password").not().isEmpty().isString(),
   ],
   userSignup
@@ -40,7 +40,7 @@ router.put(
     authenticate,
     body("firstName").not().isEmpty().isString(),
     body("lastName").not().isEmpty().isString(),
-    body("email").not().isEmpty().isEmail().normalizeEmail(),
+    body("email").not().isEmpty().isEmail(),
     body("mobile").not().isEmpty().isString(),
   ],
   updateUser

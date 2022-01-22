@@ -95,8 +95,6 @@ const updateUser = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const { firstName, lastName, email, mobile } = req.body;
-
   const id = req.params.user_id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -108,10 +106,10 @@ const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(id).select("-password");
 
   if (user) {
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.email = email;
-    user.mobile = mobile;
+    user.firstName = req.body.firstName || user.firstName;
+    user.lastName = req.body.lastName || user.lastName;
+    user.email = req.body.email || user.email;
+    user.mobile = req.body.mobile || user.mobile;
 
     await user.save();
 
