@@ -16,7 +16,6 @@ const BusinessSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "BusinessCategory",
       default: null,
-      required: true,
     },
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   },

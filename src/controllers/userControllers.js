@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import { OAuth2Client } from "google-auth-library";
+import mongoose from "mongoose";
 
 const userLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -66,8 +67,15 @@ const userSignup = asyncHandler(async (req, res) => {
   });
 });
 
-const getUserProfile = asyncHandler(async (req, res) => {
-  const id = req.user.id;
+const getUser = asyncHandler(async (req, res) => {
+  const id = req.params.user_id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "invalid user id",
+    });
+  }
+
   const user = await User.findById(id).select("-password");
 
   if (user) {
@@ -79,7 +87,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
   return res.status(400).json({ message: "Invalid user id" });
 });
 
-const updateUserProfile = asyncHandler(async (req, res) => {
+const updateUser = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -89,7 +97,13 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
   const { firstName, lastName, email, mobile } = req.body;
 
-  const { id } = req.user;
+  const id = req.params.user_id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "invalid user id",
+    });
+  }
 
   const user = await User.findById(id).select("-password");
 
@@ -170,10 +184,4 @@ const userGoogleLogin = asyncHandler(async (req, res) => {
   });
 });
 
-export {
-  userLogin,
-  userSignup,
-  getUserProfile,
-  updateUserProfile,
-  userGoogleLogin,
-};
+export { userLogin, userSignup, getUser, updateUser, userGoogleLogin };

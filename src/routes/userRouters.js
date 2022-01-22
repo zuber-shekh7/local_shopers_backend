@@ -2,8 +2,8 @@ import express from "express";
 import { body } from "express-validator";
 
 import {
-  getUserProfile,
-  updateUserProfile,
+  getUser,
+  updateUser,
   userGoogleLogin,
   userLogin,
   userSignup,
@@ -32,10 +32,10 @@ router.post(
   userSignup
 );
 
-router.get("/profile", [authenticate], getUserProfile);
+router.get("/:user_id", [authenticate], getUser);
 
 router.put(
-  "/profile",
+  "/:user_id",
   [
     authenticate,
     body("firstName").not().isEmpty().isString(),
@@ -43,7 +43,7 @@ router.put(
     body("email").not().isEmpty().isEmail().normalizeEmail(),
     body("mobile").not().isEmpty().isString(),
   ],
-  updateUserProfile
+  updateUser
 );
 
 router.post(

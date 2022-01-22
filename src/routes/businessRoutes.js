@@ -15,8 +15,6 @@ import {
 
 const router = express.Router();
 
-router.get("/:business_id", getBusiness);
-
 router.post(
   "/business-categories/new",
   [
@@ -32,6 +30,9 @@ router.put(
   [authenticateSeller, allowSellerOnly],
   updateBusiness
 );
+
 router.get("/business-categories", [authenticate], getBusinessCategories);
+
+router.get("/:business_id", getBusiness);
 
 export default router;

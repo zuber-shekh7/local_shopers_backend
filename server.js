@@ -44,9 +44,9 @@ const NODE_ENV = process.env.NODE_ENV;
 
 // routes
 app.use("/api", coreRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/sellers", sellerRoutes);
-app.use("/api/admin", adminRoutes);
 app.use("/api/business", businessRoutes);
 app.use("/api/business/categories", categoryRoutes);
 app.use("/api/business/products", productRoutes);
