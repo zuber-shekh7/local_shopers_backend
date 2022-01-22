@@ -4,6 +4,7 @@ import {
   googleAuthentication,
   sellerLogin,
   sellerSignup,
+  updateSeller,
 } from "../controllers/sellerControllers.js";
 import { body } from "express-validator";
 import {
@@ -40,5 +41,6 @@ router.post(
 );
 
 router.get("/:seller_id", [authenticateSeller, allowSellerOnly], getSeller);
+router.put("/:seller_id", [authenticateSeller, allowSellerOnly], updateSeller);
 
 export default router;

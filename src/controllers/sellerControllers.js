@@ -165,4 +165,44 @@ const googleAuthentication = asyncHandler(async (req, res) => {
   });
 });
 
-export { sellerLogin, sellerSignup, googleAuthentication, getSeller };
+const updateSeller = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const id = req.params.seller_id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "invalid seller id",
+    });
+  }
+
+  const seller = await Seller.findById(id).select("-password");
+
+  if (seller) {
+    seller.firstName = req.body.firstName || seller.firstName;
+    seller.lastName = req.body.lastName || seller.lastName;
+    seller.email = req.body.email || seller.email;
+    seller.mobile = req.body.mobile || seller.mobile;
+
+    await seller.save();
+
+    return res.json({
+      seller,
+    });
+  }
+
+  return res.status(400).json({ message: "Invalid seller id" });
+});
+
+export {
+  sellerLogin,
+  sellerSignup,
+  googleAuthentication,
+  getSeller,
+  updateSeller,
+};
