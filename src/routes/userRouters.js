@@ -4,7 +4,7 @@ import { body } from "express-validator";
 import {
   getUser,
   updateUser,
-  userGoogleLogin,
+  googleAuthentication,
   userLogin,
   userSignup,
 } from "../controllers/userControllers.js";
@@ -49,7 +49,7 @@ router.put(
 router.post(
   "/login/google",
   [body("token").exists().notEmpty().isString()],
-  userGoogleLogin
+  googleAuthentication
 );
 
 export default router;

@@ -123,7 +123,7 @@ const updateUser = asyncHandler(async (req, res) => {
   return res.status(400).json({ message: "Invalid user id" });
 });
 
-const userGoogleLogin = asyncHandler(async (req, res) => {
+const googleAuthentication = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -184,4 +184,4 @@ const userGoogleLogin = asyncHandler(async (req, res) => {
   });
 });
 
-export { userLogin, userSignup, getUser, updateUser, userGoogleLogin };
+export { userLogin, userSignup, getUser, updateUser, googleAuthentication };
