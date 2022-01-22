@@ -1,7 +1,7 @@
 import express from "express";
 import {
   getSeller,
-  sellerGoogleLogin,
+  googleAuthentication,
   sellerLogin,
   sellerSignup,
 } from "../controllers/sellerControllers.js";
@@ -36,7 +36,7 @@ router.post(
 router.post(
   "/login/google",
   [body("token").exists().notEmpty().isString()],
-  sellerGoogleLogin
+  googleAuthentication
 );
 
 router.get("/:seller_id", [authenticateSeller, allowSellerOnly], getSeller);

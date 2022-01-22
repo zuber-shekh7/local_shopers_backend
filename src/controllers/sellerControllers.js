@@ -98,7 +98,7 @@ const getSeller = asyncHandler(async (req, res) => {
   });
 });
 
-const sellerGoogleLogin = asyncHandler(async (req, res) => {
+const googleAuthentication = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -165,4 +165,4 @@ const sellerGoogleLogin = asyncHandler(async (req, res) => {
   });
 });
 
-export { sellerLogin, sellerSignup, sellerGoogleLogin, getSeller };
+export { sellerLogin, sellerSignup, googleAuthentication, getSeller };
