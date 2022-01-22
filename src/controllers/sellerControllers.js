@@ -2,9 +2,8 @@ import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
-import BusinessCategory from "../models/BusinessCategoryModel.js";
-import Business from "../models/BusinessModel.js";
 import Seller from "../models/SellerModel.js";
+import mongoose from "mongoose";
 
 const sellerLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -67,7 +66,7 @@ const sellerSignup = asyncHandler(async (req, res) => {
   });
 });
 
-const createBusiness = asyncHandler(async (req, res) => {
+const getSeller = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -75,50 +74,14 @@ const createBusiness = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const { name, description, business_category_id } = req.body;
+  const id = req.params.seller_id;
 
-  const { id } = req.seller;
-
-  const seller = await Seller.findById(id);
-
-  if (seller && seller.business) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(400);
     return res.json({
-      message: "Business is already exists",
+      message: "Invalid seller id",
     });
   }
-
-  const category = await BusinessCategory.findById(business_category_id);
-
-  if (!category) {
-    return res.status(400).json({
-      message: "Invalid Business Category id",
-    });
-  }
-
-  const business = await Business.create({
-    name,
-    description,
-    category,
-  });
-
-  seller.business = business._id;
-  await seller.save();
-
-  return res.status(201).json({
-    business: await Business.findById(business._id).populate("category"),
-  });
-});
-
-const getSellerProfile = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
-  }
-
-  const { id } = req.seller;
 
   const seller = await Seller.findById(id)
     .populate("business")
@@ -132,29 +95,6 @@ const getSellerProfile = asyncHandler(async (req, res) => {
 
   return res.status(400).json({
     message: "Invalid seller id",
-  });
-});
-
-const getBusinessDetails = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
-  }
-
-  const { id } = req.params;
-
-  const business = await Business.findById(id);
-
-  if (business) {
-    return res.json({
-      business,
-    });
-  }
-
-  return res.status(400).json({
-    message: "Invalid business id",
   });
 });
 
@@ -225,11 +165,4 @@ const sellerGoogleLogin = asyncHandler(async (req, res) => {
   });
 });
 
-export {
-  sellerLogin,
-  sellerSignup,
-  sellerGoogleLogin,
-  createBusiness,
-  getSellerProfile,
-  getBusinessDetails,
-};
+export { sellerLogin, sellerSignup, sellerGoogleLogin, getSeller };

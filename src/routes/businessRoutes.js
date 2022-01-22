@@ -5,8 +5,9 @@ import {
   getBusiness,
   getBusinessCategories,
   updateBusiness,
+  createBusiness,
 } from "../controllers/businessControllers.js";
-import { getBusinessDetails } from "../controllers/sellerControllers.js";
+
 import {
   allowSellerOnly,
   authenticate,
@@ -23,6 +24,18 @@ router.post(
     body("description").exists().notEmpty().isString(),
   ],
   createBusinessCategory
+);
+
+router.post(
+  "/new",
+  [
+    authenticateSeller,
+    allowSellerOnly,
+    body("name").notEmpty().isString(),
+    body("description").notEmpty().isString(),
+    body("business_category_id").exists().notEmpty().isString(),
+  ],
+  createBusiness
 );
 
 router.put(

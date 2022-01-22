@@ -1,13 +1,11 @@
 import express from "express";
 import {
-  createBusiness,
-  getBusinessDetails,
-  getSellerProfile,
+  getSeller,
   sellerGoogleLogin,
   sellerLogin,
   sellerSignup,
 } from "../controllers/sellerControllers.js";
-import { body, param } from "express-validator";
+import { body } from "express-validator";
 import {
   allowSellerOnly,
   authenticateSeller,
@@ -36,28 +34,11 @@ router.post(
 );
 
 router.post(
-  "/business/new",
-  [
-    authenticateSeller,
-    allowSellerOnly,
-    body("name").notEmpty().isString(),
-    body("description").notEmpty().isString(),
-    body("business_category_id").exists().notEmpty().isString(),
-  ],
-  createBusiness
-);
-
-router.get(
-  "/business/:id",
-  [authenticateSeller, allowSellerOnly],
-  getBusinessDetails
-);
-
-router.get("/profile", [authenticateSeller, allowSellerOnly], getSellerProfile);
-
-router.post(
   "/login/google",
   [body("token").exists().notEmpty().isString()],
   sellerGoogleLogin
 );
+
+router.get("/:seller_id", [authenticateSeller, allowSellerOnly], getSeller);
+
 export default router;
