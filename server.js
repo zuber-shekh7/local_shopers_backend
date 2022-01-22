@@ -51,7 +51,7 @@ app.use("/api/sellers", sellerRoutes);
 app.use("/api/business", businessRoutes);
 app.use("/api/business-categories", businessCategoryRoutes);
 app.use("/api/categories", categoryRoutes);
-app.use("/api/business/products", productRoutes);
+app.use("/api/products", productRoutes);
 
 // not found middleware
 app.use(notFoundMiddleware);

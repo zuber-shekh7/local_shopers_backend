@@ -38,7 +38,7 @@ router.get(
 );
 
 router.put(
-  "/:product_id/edit",
+  "/:product_id",
   [
     authenticateSeller,
     allowSellerOnly,

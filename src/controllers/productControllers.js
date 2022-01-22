@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import Category from "../models/CategoryModel.js";
@@ -12,6 +13,12 @@ const createProduct = asyncHandler(async (req, res) => {
   }
 
   const category_id = req.body.category_id;
+
+  if (!mongoose.Types.ObjectId.isValid(category_id)) {
+    return res.status(400).json({
+      message: "Invalid category id",
+    });
+  }
 
   const category = await Category.findById(category_id);
 
@@ -47,6 +54,12 @@ const getProduct = asyncHandler(async (req, res) => {
 
   const product_id = req.params.product_id;
 
+  if (!mongoose.Types.ObjectId.isValid(product_id)) {
+    return res.status(400).json({
+      message: "Invalid product id",
+    });
+  }
+
   const product = await Product.findById(product_id);
 
   if (product) {
@@ -67,6 +80,12 @@ const editProduct = asyncHandler(async (req, res) => {
   }
 
   const product_id = req.params.product_id;
+
+  if (!mongoose.Types.ObjectId.isValid(product_id)) {
+    return res.status(400).json({
+      message: "Invalid product id",
+    });
+  }
 
   const product = await Product.findById(product_id);
 
@@ -100,6 +119,12 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 
   const product_id = req.params.product_id;
+
+  if (!mongoose.Types.ObjectId.isValid(product_id)) {
+    return res.status(400).json({
+      message: "Invalid product id",
+    });
+  }
 
   const product = await Product.findByIdAndDelete(product_id);
 
