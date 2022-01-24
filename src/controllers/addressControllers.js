@@ -112,4 +112,51 @@ const getAddress = asyncHandler(async (req, res) => {
   });
 });
 
-export { getAddresses, createAddress, getAddress };
+const editAddress = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const address_id = req.params.address_id;
+
+  if (!mongoose.Types.ObjectId.isValid(address_id)) {
+    return res.status(400).json({
+      message: "Invalid address id",
+    });
+  }
+
+  const address = await Address.findById(address_id);
+
+  if (address) {
+    const fullName = req.body.fullName || address.fullName;
+    const mobileNumber = req.body.mobileNumber || address.mobileNumber;
+    const flatNo = req.body.flatNo || address.flatNo;
+    const city = req.body.city || address.city;
+    const state = req.body.state || address.state;
+    const landmark = req.body.landmark || address.landmark;
+    const street = req.body.street || address.street;
+    const pincode = req.body.pincode || address.pincode;
+
+    address.fullName = fullName;
+    address.mobileNumber = mobileNumber;
+    address.flatNo = flatNo;
+    address.city = city;
+    address.state = state;
+    address.landmark = landmark;
+    address.street = street;
+    address.pincode = pincode;
+
+    await address.save();
+
+    return res.status(200).json({ address });
+  }
+
+  return res.status(400).json({
+    message: "Invalid address id",
+  });
+});
+
+export { getAddresses, createAddress, getAddress, editAddress };

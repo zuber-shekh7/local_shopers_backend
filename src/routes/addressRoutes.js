@@ -4,6 +4,7 @@ import {
   getAddresses,
   createAddress,
   getAddress,
+  editAddress,
 } from "../controllers/addressControllers.js";
 
 import { authenticate } from "../middlewares/authMiddlewares.js";
@@ -32,5 +33,7 @@ router.post(
 );
 
 router.get("/:address_id", [authenticate], getAddress);
+
+router.put("/:address_id", [authenticate], editAddress);
 
 export default router;
