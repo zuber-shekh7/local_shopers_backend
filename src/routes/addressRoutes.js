@@ -1,8 +1,9 @@
 import express from "express";
 import { body, query } from "express-validator";
 import {
-  createAddress,
   getAddresses,
+  createAddress,
+  getAddress,
 } from "../controllers/addressControllers.js";
 
 import { authenticate } from "../middlewares/authMiddlewares.js";
@@ -29,5 +30,7 @@ router.post(
   ],
   createAddress
 );
+
+router.get("/:address_id", [authenticate], getAddress);
 
 export default router;

@@ -84,4 +84,32 @@ const createAddress = asyncHandler(async (req, res) => {
     message: "Invalid user id",
   });
 });
-export { getAddresses, createAddress };
+
+const getAddress = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const address_id = req.params.address_id;
+
+  if (!mongoose.Types.ObjectId.isValid(address_id)) {
+    return res.status(400).json({
+      message: "Invalid address id",
+    });
+  }
+
+  const address = await Address.findById(address_id);
+
+  if (address) {
+    return res.status(200).json({ address });
+  }
+
+  return res.status(400).json({
+    message: "Invalid address id",
+  });
+});
+
+export { getAddresses, createAddress, getAddress };
