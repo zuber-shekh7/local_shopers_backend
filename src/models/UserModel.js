@@ -41,10 +41,12 @@ const UserSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "WishList",
     },
-    addresses: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Address",
-    },
+    addresses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Address",
+      },
+    ],
   },
   {
     timestamps: true,
