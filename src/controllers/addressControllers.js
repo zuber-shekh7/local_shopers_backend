@@ -159,4 +159,31 @@ const editAddress = asyncHandler(async (req, res) => {
   });
 });
 
-export { getAddresses, createAddress, getAddress, editAddress };
+const deleteAddress = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const address_id = req.params.address_id;
+
+  if (!mongoose.Types.ObjectId.isValid(address_id)) {
+    return res.status(400).json({
+      message: "Invalid address id",
+    });
+  }
+
+  const address = await Address.findById(address_id);
+
+  if (address) {
+    await address.delete();
+    return res.status(200).json({ message: "Address deleted successfully" });
+  }
+
+  return res.status(400).json({
+    message: "Invalid address id",
+  });
+});
+export { getAddresses, createAddress, getAddress, editAddress, deleteAddress };
