@@ -20,7 +20,7 @@ const getAddresses = asyncHandler(async (req, res) => {
     });
   }
 
-  const user = await User.findById(user_id);
+  const user = await User.findById(user_id).populate("addresses");
 
   if (user) {
     const addresses = user.addresses;
