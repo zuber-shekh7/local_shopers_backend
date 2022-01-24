@@ -16,7 +16,7 @@ router.get(
 );
 
 router.post(
-  "/add",
+  "/",
   [
     authenticate,
     body("wish_list_id").exists().notEmpty().isString(),
@@ -25,8 +25,8 @@ router.post(
   addToWishList
 );
 
-router.post(
-  "/remove",
+router.delete(
+  "/",
   [
     authenticate,
     body("wish_list_id").exists().notEmpty().isString(),
