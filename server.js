@@ -14,6 +14,7 @@ import categoryRoutes from "./src/routes/categoriesRoutes.js";
 import productRoutes from "./src/routes/productRoutes.js";
 import businessRoutes from "./src/routes/businessRoutes.js";
 import businessCategoryRoutes from "./src/routes/businessCategoryRoutes.js";
+import wishListRoutes from "./src/routes/wishListRoutes.js";
 
 import { errorHandler } from "./src/middlewares/errorMiddlewares.js";
 import notFoundMiddleware from "./src/middlewares/notFoundMiddleware.js";
@@ -52,6 +53,7 @@ app.use("/api/business", businessRoutes);
 app.use("/api/business-categories", businessCategoryRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/wishlists", wishListRoutes);
 
 // not found middleware
 app.use(notFoundMiddleware);

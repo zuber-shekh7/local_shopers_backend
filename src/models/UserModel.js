@@ -37,6 +37,10 @@ const UserSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    wishList: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "WishList",
+    },
   },
   {
     timestamps: true,
