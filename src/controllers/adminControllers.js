@@ -5,6 +5,7 @@ import { validationResult } from "express-validator";
 import CategoryModel from "../models/CategoryModel.js";
 import SellerModel from "../models/SellerModel.js";
 import UserModel from "../models/UserModel.js";
+import BusinessCategoryModel from "../models/BusinessCategoryModel.js";
 
 const adminLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -79,7 +80,7 @@ const getUsersList = asyncHandler(async (req, res) => {
       .select("-isActive");
     return res.status(200).json({ usersList });
   } catch (err) {
-    return res.status(400).json({ err });
+    return res.status(400).json({ message: err });
   }
 });
 
@@ -91,7 +92,16 @@ const getAdminList = asyncHandler(async (req, res) => {
       .select("-isActive");
     return res.status(200).json({ usersList });
   } catch (err) {
-    return res.status(400).json({ err });
+    return res.status(400).json({ message: err });
+  }
+});
+
+const getBusinessCategory = asyncHandler(async (req, res) => {
+  try {
+    const businessCategory = await BusinessCategoryModel.find();
+    return res.status(200).json({ businessCategory });
+  } catch (err) {
+    return res.status(400).json({ message: err });
   }
 });
 
@@ -102,4 +112,5 @@ export {
   getAdminList,
   getSellerList,
   getUsersList,
+  getBusinessCategory,
 };
