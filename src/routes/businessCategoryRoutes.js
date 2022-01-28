@@ -3,6 +3,7 @@ import express from "express";
 import {
   createBusinessCategory,
   getBusinessCategories,
+  getBusinessCategory,
 } from "../controllers/businessCategoryControllers.js";
 import { body } from "express-validator";
 import { authenticate } from "../middlewares/authMiddlewares.js";
@@ -20,5 +21,7 @@ router.post(
   ],
   createBusinessCategory
 );
+
+router.get("/:category_id", [authenticate], getBusinessCategory);
 
 export default router;
