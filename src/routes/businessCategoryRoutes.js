@@ -13,7 +13,7 @@ const router = express.Router();
 router.get("/", [authenticate], getBusinessCategories);
 
 router.post(
-  "/new",
+  "/",
   [
     authenticate,
     body("name").exists().notEmpty().isString(),
