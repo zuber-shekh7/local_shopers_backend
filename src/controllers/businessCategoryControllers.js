@@ -105,9 +105,41 @@ const editBusinessCategory = asyncHandler(async (req, res) => {
   });
 });
 
+const deleteBusinessCategory = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const { category_id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(category_id)) {
+    return res.status(400).json({
+      message: "Invalid business category id",
+    });
+  }
+
+  const category = await BusinessCategory.findById(category_id);
+
+  if (category) {
+    await category.delete();
+
+    return res.json({
+      message: "Successfully deleted business category",
+    });
+  }
+
+  return res.status(400).json({
+    message: "Invalid business category id",
+  });
+});
+
 export {
   getBusinessCategories,
   createBusinessCategory,
   getBusinessCategory,
   editBusinessCategory,
+  deleteBusinessCategory,
 };
