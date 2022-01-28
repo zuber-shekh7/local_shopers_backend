@@ -69,4 +69,45 @@ const getBusinessCategory = asyncHandler(async (req, res) => {
   });
 });
 
-export { getBusinessCategories, createBusinessCategory, getBusinessCategory };
+const editBusinessCategory = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const { category_id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(category_id)) {
+    return res.status(400).json({
+      message: "Invalid business category id",
+    });
+  }
+
+  const category = await BusinessCategory.findById(category_id);
+
+  if (category) {
+    const name = req.body.name || category.name;
+    const description = req.body.description || category.description;
+
+    category.name = name;
+    category.description = description;
+    await category.save();
+
+    return res.json({
+      category,
+    });
+  }
+
+  return res.status(400).json({
+    message: "Invalid business category id",
+  });
+});
+
+export {
+  getBusinessCategories,
+  createBusinessCategory,
+  getBusinessCategory,
+  editBusinessCategory,
+};

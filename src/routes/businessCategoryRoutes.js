@@ -2,6 +2,7 @@ import express from "express";
 
 import {
   createBusinessCategory,
+  editBusinessCategory,
   getBusinessCategories,
   getBusinessCategory,
 } from "../controllers/businessCategoryControllers.js";
@@ -24,4 +25,5 @@ router.post(
 
 router.get("/:category_id", [authenticate], getBusinessCategory);
 
+router.put("/:category_id", [authenticate], editBusinessCategory);
 export default router;
