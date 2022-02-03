@@ -6,6 +6,7 @@ import CategoryModel from "../models/CategoryModel.js";
 import SellerModel from "../models/SellerModel.js";
 import UserModel from "../models/UserModel.js";
 import BusinessCategoryModel from "../models/BusinessCategoryModel.js";
+import ProductModel from "../models/ProductModel.js";
 
 const adminLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -105,6 +106,25 @@ const getBusinessCategory = asyncHandler(async (req, res) => {
   }
 });
 
+const getStatistics = asyncHandler(async (req, res) => {
+  try {
+    const totalCustomers = await UserModel.countDocuments();
+    const totalSellers = await SellerModel.countDocuments();
+    const totalProducts = await ProductModel.countDocuments();
+    // const totalOrders = (await OrderModel.countDocuments()) || 0;
+    const totalItems = {
+      //totalOrders,
+      totalCustomers,
+      totalProducts,
+      totalSellers,
+    };
+    console.log(totalItems);
+    return res.status(200).json({ totalItems });
+  } catch (err) {
+    return res.status(400).json({ message: err });
+  }
+});
+
 export {
   adminLogin,
   getCategoryAdmin,
@@ -112,5 +132,6 @@ export {
   getAdminList,
   getSellerList,
   getUsersList,
+  getStatistics,
   getBusinessCategory,
 };

@@ -8,6 +8,7 @@ import {
   getSellerList,
   getUsersList,
   getBusinessCategory,
+  getStatistics,
 } from "../controllers/adminControllers.js";
 
 const router = express.Router();
@@ -25,6 +26,8 @@ router.post(
   [body("categoryId").isEmpty().isString()],
   getProducts
 );
+
+router.post("/get", [], getStatistics);
 
 router.post("/getcategories", [], getCategoryAdmin);
 
