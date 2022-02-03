@@ -37,11 +37,7 @@ router.post(
 
 router.get(
   "/:category_id",
-  [
-    authenticateSeller,
-    allowSellerOnly,
-    param("category_id").exists().notEmpty().isString(),
-  ],
+  [param("category_id").exists().notEmpty().isString()],
   getCategory
 );
 
