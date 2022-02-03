@@ -29,11 +29,7 @@ router.post(
 
 router.get(
   "/:product_id",
-  [
-    authenticateSeller,
-    allowSellerOnly,
-    param("product_id").exists().notEmpty().isString(),
-  ],
+  [param("product_id").exists().notEmpty().isString()],
   getProduct
 );
 
