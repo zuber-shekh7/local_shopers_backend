@@ -93,7 +93,7 @@ const editProduct = asyncHandler(async (req, res) => {
     const name = req.body.name || product.name;
     const description = req.body.description || product.description;
     const price = req.body.price || product.price;
-    const quantity = req.body.quantity || product.quantity;
+    const quantity = req.body.quantity;
 
     product.name = name;
     product.description = description;
