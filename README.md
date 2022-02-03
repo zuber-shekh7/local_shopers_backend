@@ -11,7 +11,7 @@ We are B2B organisation provide, an online platform for the seller to sell their
 
 ### yarn init
 
-### yarn run
+### yarn run dev
 
 ### yarn run test
 
