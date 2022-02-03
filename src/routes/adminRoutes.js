@@ -1,6 +1,15 @@
 import express from "express";
 import { body } from "express-validator";
-import { adminLogin } from "../controllers/adminControllers.js";
+import {
+  adminLogin,
+  getAdminList,
+  getCategoryAdmin,
+  getProducts,
+  getSellerList,
+  getUsersList,
+  getBusinessCategory,
+  getStatistics,
+} from "../controllers/adminControllers.js";
 
 const router = express.Router();
 
@@ -12,5 +21,22 @@ router.post(
   ],
   adminLogin
 );
+router.post(
+  "/getproducts",
+  [body("categoryId").isEmpty().isString()],
+  getProducts
+);
+
+router.post("/get", [], getStatistics);
+
+router.post("/getcategories", [], getCategoryAdmin);
+
+router.post("/getseller", [], getSellerList);
+
+router.post("/getusers", [], getUsersList);
+
+router.post("/getadmins", [], getAdminList);
+
+router.post("/getbusinesscategory", [], getBusinessCategory);
 
 export default router;
