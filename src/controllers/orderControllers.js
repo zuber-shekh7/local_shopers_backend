@@ -4,7 +4,7 @@ import Order from "../models/OrderModel.js";
 
 const getUserOrders = asyncHandler(async (req, res) => {
   const { user_id } = req.query;
-  console.log(req.query);
+
   if (!mongoose.Types.ObjectId.isValid(user_id)) {
     return res.status(400).json({
       message: "Invalid user id",
