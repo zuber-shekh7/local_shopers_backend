@@ -72,6 +72,18 @@ const addToWishList = asyncHandler(async (req, res) => {
   const wishList = await WishList.findById(wish_list_id).populate("products");
 
   if (wishList) {
+    const existProduct = await wishList.products.filter((product) => {
+      if (product._id.toString() === product_id) {
+        return product;
+      }
+    });
+
+    if (existProduct.length > 0) {
+      return res.json({
+        message: "Product already added to wishlist",
+      });
+    }
+
     const product = await Product.findById(product_id);
 
     if (product) {
