@@ -3,8 +3,8 @@ import asyncHandler from "express-async-handler";
 import Order from "../models/OrderModel.js";
 
 const getUserOrders = asyncHandler(async (req, res) => {
-  const { user_id } = req.params;
-
+  const { user_id } = req.query;
+  console.log(req.query);
   if (!mongoose.Types.ObjectId.isValid(user_id)) {
     return res.status(400).json({
       message: "Invalid user id",
@@ -24,4 +24,26 @@ const createOrder = asyncHandler(async (req, res) => {
   });
 });
 
-export { getUserOrders, createOrder };
+const getOrder = asyncHandler(async (req, res) => {
+  const { order_id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(order_id)) {
+    return res.status(400).json({
+      message: "Invalid order id",
+    });
+  }
+
+  const order = await Order.findById(order_id);
+
+  if (order) {
+    return res.json({
+      order,
+    });
+  }
+
+  return res.status(400).json({
+    message: "Invalid order id",
+  });
+});
+
+export { getUserOrders, createOrder, getOrder };

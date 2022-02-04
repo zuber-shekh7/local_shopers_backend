@@ -1,10 +1,15 @@
 import express from "express";
-import { createOrder, getUserOrders } from "../controllers/orderControllers.js";
+import {
+  createOrder,
+  getOrder,
+  getUserOrders,
+} from "../controllers/orderControllers.js";
 import { authenticate } from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
 
-router.get("/:user_id", [authenticate], getUserOrders);
+router.get("/", [authenticate], getUserOrders);
+router.get("/:order_id", [authenticate], getOrder);
 
 router.post("", [authenticate], createOrder);
 
