@@ -14,29 +14,41 @@ const OrderSchema = mongoose.Schema(
     },
     orderItems: [
       {
-        name: {
-          type: String,
-          required: true,
-        },
-        qty: {
-          type: Number,
-          required: true,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
-        product: {
-          type: mongoose.Schema.Types.ObjectId,
-          required: true,
-          ref: "Product",
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Product",
       },
     ],
     shippingAddress: {
-      address: {
+      fullName: {
         type: String,
         required: true,
+      },
+      mobileNumber: {
+        type: String,
+        required: true,
+      },
+      pincode: {
+        type: String,
+        required: true,
+      },
+      flatNo: {
+        type: String,
+        required: true,
+      },
+      street: {
+        type: String,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+      state: {
+        type: String,
+        required: true,
+      },
+      landmark: {
+        type: String,
       },
     },
     paymentMethod: {
