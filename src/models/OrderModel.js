@@ -14,9 +14,24 @@ const OrderSchema = mongoose.Schema(
     },
     orderItems: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Product",
+        name: {
+          type: String,
+          trim: true,
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+        qty: {
+          type: Number,
+          required: true,
+        },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Product",
+        },
       },
     ],
     shippingAddress: {
