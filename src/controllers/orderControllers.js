@@ -14,7 +14,15 @@ const getUserOrders = asyncHandler(async (req, res) => {
     });
   }
 
-  const orders = await Order.find({ "user._id": user_id });
+  const user = await User.findById(user_id);
+
+  if (!user) {
+    return res.status(400).json({
+      message: "Invalid user id",
+    });
+  }
+
+  const orders = await Order.find({ user });
 
   return res.json({
     orders,
