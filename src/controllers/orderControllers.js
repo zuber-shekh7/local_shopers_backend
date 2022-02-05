@@ -111,7 +111,6 @@ const createOrder = asyncHandler(async (req, res) => {
     tax,
     shippingCharges,
     totalPrice,
-    status: "RECEIVED",
   });
 
   return res.json({
