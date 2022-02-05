@@ -5,6 +5,7 @@ import {
   getOrder,
   getSellerOrders,
   getUserOrders,
+  updateOrderStatus,
 } from "../controllers/orderControllers.js";
 import {
   authenticate,
@@ -16,6 +17,11 @@ const router = express.Router();
 router.get("/", [authenticate], getUserOrders);
 router.get("/seller/", [authenticateSeller], getSellerOrders);
 router.get("/:order_id", [authenticate], getOrder);
+router.put(
+  "/:order_id",
+  [authenticateSeller, body("status").exists().notEmpty().isString()],
+  updateOrderStatus
+);
 
 router.post(
   "",

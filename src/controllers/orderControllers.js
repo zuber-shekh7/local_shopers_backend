@@ -140,4 +140,36 @@ const getOrder = asyncHandler(async (req, res) => {
   });
 });
 
-export { getUserOrders, getSellerOrders, createOrder, getOrder };
+const updateOrderStatus = asyncHandler(async (req, res) => {
+  const { order_id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(order_id)) {
+    return res.status(400).json({
+      message: "Invalid order id",
+    });
+  }
+
+  const order = await Order.findById(order_id).populate("orderItems");
+
+  if (order) {
+    const { status } = req.body;
+
+    const updatedOrder = await Order.findByIdAndUpdate(order_id, { status });
+
+    return res.json({
+      order: updatedOrder,
+    });
+  }
+
+  return res.status(400).json({
+    message: "Invalid order id",
+  });
+});
+
+export {
+  getUserOrders,
+  getSellerOrders,
+  createOrder,
+  getOrder,
+  updateOrderStatus,
+};
