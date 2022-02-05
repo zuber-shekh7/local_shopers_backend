@@ -3,13 +3,18 @@ import { body } from "express-validator";
 import {
   createOrder,
   getOrder,
+  getSellerOrders,
   getUserOrders,
 } from "../controllers/orderControllers.js";
-import { authenticate } from "../middlewares/authMiddlewares.js";
+import {
+  authenticate,
+  authenticateSeller,
+} from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
 
 router.get("/", [authenticate], getUserOrders);
+router.get("/seller/", [authenticateSeller], getSellerOrders);
 router.get("/:order_id", [authenticate], getOrder);
 
 router.post(

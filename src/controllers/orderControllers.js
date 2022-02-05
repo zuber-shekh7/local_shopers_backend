@@ -29,6 +29,33 @@ const getUserOrders = asyncHandler(async (req, res) => {
   });
 });
 
+const getSellerOrders = asyncHandler(async (req, res) => {
+  const { business_id } = req.query;
+
+  if (!mongoose.Types.ObjectId.isValid(business_id)) {
+    return res.status(400).json({
+      message: "Invalid business id",
+    });
+  }
+
+  const business = await Business.findById(business_id);
+
+  if (!business) {
+    return res.status(400).json({
+      message: "Invalid business id",
+    });
+  }
+
+  const orders = await Order.find({ business }).populate(
+    "orderItems",
+    "business"
+  );
+
+  return res.json({
+    orders,
+  });
+});
+
 const createOrder = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
@@ -114,4 +141,4 @@ const getOrder = asyncHandler(async (req, res) => {
   });
 });
 
-export { getUserOrders, createOrder, getOrder };
+export { getUserOrders, getSellerOrders, createOrder, getOrder };
