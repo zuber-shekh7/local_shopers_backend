@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import Business from "../models/BusinessModel.js";
 import Category from "../models/CategoryModel.js";
+import { uploadFile } from "../config/s3.js";
 
 const getCategories = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -52,8 +53,19 @@ const createCategory = asyncHandler(async (req, res) => {
   if (business) {
     const name = req.body.name;
 
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({
+        message: "Image field required",
+      });
+    }
+
+    // uploading image to s3
+    const { Location: image } = await uploadFile(file);
+
     const category = await Category.create({
       name,
+      image,
     });
 
     business.categories.push(category);
@@ -114,9 +126,20 @@ const updateCategory = asyncHandler(async (req, res) => {
   const category = await Category.findById(category_id);
 
   if (category) {
+    let image;
+    if (req.file) {
+      // uploading image to s3
+      const file = req.file;
+      const { Location } = await uploadFile(file);
+      image = Location;
+    } else {
+      image = category.image;
+    }
+
     const name = req.body.name || category.name;
 
     category.name = name;
+    category.image = image;
 
     await category.save();
 

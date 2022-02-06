@@ -7,6 +7,10 @@ const CategorySchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    image: {
+      type: String,
+      required: true,
+    },
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
