@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import { body, param } from "express-validator";
 import {
   createProduct,
@@ -12,12 +13,14 @@ import {
 } from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
+const upload = multer();
 
 router.post(
-  "/new",
+  "/",
   [
     authenticateSeller,
     allowSellerOnly,
+    upload.single("image"),
     body("category_id").exists().notEmpty().isString(),
     body("name").exists().notEmpty().isString(),
     body("description").exists().notEmpty().isString(),
@@ -38,6 +41,7 @@ router.put(
   [
     authenticateSeller,
     allowSellerOnly,
+    upload.single("image"),
     param("product_id").exists().notEmpty().isString(),
   ],
   editProduct

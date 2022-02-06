@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import Category from "../models/CategoryModel.js";
 import Product from "../models/ProductModel.js";
+import { uploadFile } from "../config/s3.js";
 
 const createProduct = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -23,13 +24,25 @@ const createProduct = asyncHandler(async (req, res) => {
   const category = await Category.findById(category_id);
 
   if (category) {
-    const { name, description, price, quantity } = req.body;
+    const { name, description, price, quantity, unit } = req.body;
+
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({
+        message: "Image field required",
+      });
+    }
+
+    // uploading image to s3
+    const { Location: image } = await uploadFile(file);
 
     const product = await Product.create({
       name,
       description,
       price,
       quantity,
+      image,
+      unit,
     });
 
     category.products.push(product);
@@ -94,11 +107,24 @@ const editProduct = asyncHandler(async (req, res) => {
     const description = req.body.description || product.description;
     const price = req.body.price || product.price;
     const quantity = req.body.quantity;
+    const unit = req.body.unit;
+
+    let image;
+    if (req.file) {
+      // uploading image to s3
+      const file = req.file;
+      const { Location } = await uploadFile(file);
+      image = Location;
+    } else {
+      image = product.image;
+    }
 
     product.name = name;
     product.description = description;
     product.quantity = quantity;
     product.price = price;
+    product.image = image;
+    product.unit = unit;
 
     await product.save();
 

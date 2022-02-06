@@ -12,6 +12,10 @@ const ProductSchema = mongoose.Schema(
       trim: true,
       required: true,
     },
+    image: {
+      type: String,
+      required: true,
+    },
     price: {
       type: Number,
       required: true,
@@ -19,6 +23,9 @@ const ProductSchema = mongoose.Schema(
     quantity: {
       type: Number,
       default: 0,
+    },
+    unit: {
+      type: String,
     },
   },
   {
