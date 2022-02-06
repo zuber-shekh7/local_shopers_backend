@@ -124,9 +124,20 @@ const updateBusiness = asyncHandler(async (req, res) => {
     const description = req.body.description || business.description;
     const category = req.body.category_id || business.category;
 
+    let image;
+    if (req.file) {
+      // uploading image to s3
+      const file = req.file;
+      const { Location } = await uploadFile(file);
+      image = Location;
+    } else {
+      image = business.image;
+    }
+
     business.name = name;
     business.description = description;
     business.category = category;
+    business.image = image;
 
     await business.save();
 

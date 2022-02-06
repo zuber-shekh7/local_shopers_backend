@@ -30,7 +30,7 @@ router.post(
 
 router.put(
   "/:business_id",
-  [authenticateSeller, allowSellerOnly],
+  [authenticateSeller, allowSellerOnly, upload.single("image")],
   updateBusiness
 );
 
