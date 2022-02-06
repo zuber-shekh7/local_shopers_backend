@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import BusinessCategory from "../models/BusinessCategoryModel.js";
+import { uploadFile } from "../config/s3.js";
 
 const getBusinessCategories = asyncHandler(async (req, res) => {
   const categories = await BusinessCategory.find();
@@ -30,9 +31,20 @@ const createBusinessCategory = asyncHandler(async (req, res) => {
     });
   }
 
+  // uploading image to s3
+  const file = req.file;
+  if (!file) {
+    return res.status(400).json({
+      message: "Image field is required",
+    });
+  }
+
+  const { Location: image } = await uploadFile(file);
+
   const category = await BusinessCategory.create({
     name,
     description,
+    image,
   });
 
   return res.json({
@@ -91,8 +103,20 @@ const editBusinessCategory = asyncHandler(async (req, res) => {
     const name = req.body.name || category.name;
     const description = req.body.description || category.description;
 
+    let image;
+    if (req.file) {
+      // uploading image to s3
+      const file = req.file;
+      const { Location } = await uploadFile(file);
+      image = Location;
+    } else {
+      image = category.image;
+    }
+
     category.name = name;
     category.description = description;
+    category.image = image;
+
     await category.save();
 
     return res.json({

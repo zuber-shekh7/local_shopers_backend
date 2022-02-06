@@ -12,6 +12,10 @@ const BusinessCategorySchema = mongoose.Schema(
       trim: true,
       required: true,
     },
+    image: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
