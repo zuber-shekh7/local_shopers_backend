@@ -4,6 +4,7 @@ import BusinessCategory from "../models/BusinessCategoryModel.js";
 import Business from "../models/BusinessModel.js";
 import mongoose from "mongoose";
 import Seller from "../models/SellerModel.js";
+import { uploadFile } from "../config/s3.js";
 
 const createBusiness = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -55,10 +56,21 @@ const createBusiness = asyncHandler(async (req, res) => {
     });
   }
 
+  const file = req.file;
+  if (!file) {
+    return res.status(400).json({
+      message: "Image field required",
+    });
+  }
+
+  // uploading image to s3
+  const { Location: image } = await uploadFile(file);
+
   const business = await Business.create({
     name,
     description,
     category,
+    image,
   });
 
   seller.business = business._id;

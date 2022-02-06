@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import { body } from "express-validator";
 import {
   getBusiness,
@@ -12,12 +13,14 @@ import {
 } from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
+const upload = multer();
 
 router.post(
   "/new",
   [
     authenticateSeller,
     allowSellerOnly,
+    upload.single("image"),
     body("name").notEmpty().isString(),
     body("description").notEmpty().isString(),
     body("business_category_id").exists().notEmpty().isString(),
