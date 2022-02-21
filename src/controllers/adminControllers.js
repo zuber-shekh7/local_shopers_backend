@@ -59,12 +59,18 @@ const getSellerList = asyncHandler(async (req, res) => {
   return res.status(200).json({ sellerList });
 });
 
-const getUsersList = asyncHandler(async (req, res) => {
-  const usersList = await UserModel.find({ isAdmin: false })
+const getCustomers = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const customers = await UserModel.find()
     .select("-password")
-    .select("-isAdmin")
-    .select("-isActive");
-  return res.status(200).json({ usersList });
+    .select("-isAdmin");
+  return res.status(200).json({ customers });
 });
 
 const getAdminList = asyncHandler(async (req, res) => {
@@ -100,7 +106,7 @@ export {
   getProducts,
   getAdminList,
   getSellerList,
-  getUsersList,
+  getCustomers,
   getStatistics,
   getBusinessCategory,
 };

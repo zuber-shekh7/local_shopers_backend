@@ -6,10 +6,14 @@ import {
   getCategoryAdmin,
   getProducts,
   getSellerList,
-  getUsersList,
   getBusinessCategory,
   getStatistics,
+  getCustomers,
 } from "../controllers/adminControllers.js";
+import {
+  allowAdminOnly,
+  authenticate,
+} from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
 
@@ -33,7 +37,7 @@ router.post("/getcategories", [], getCategoryAdmin);
 
 router.post("/getseller", [], getSellerList);
 
-router.post("/getusers", [], getUsersList);
+router.get("/customers", [authenticate, allowAdminOnly], getCustomers);
 
 router.post("/getadmins", [], getAdminList);
 
