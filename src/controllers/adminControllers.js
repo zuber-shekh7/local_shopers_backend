@@ -51,12 +51,17 @@ const getProducts = asyncHandler(async (req, res) => {
   return res.status(200).json({ productDetails });
 });
 
-const getSellerList = asyncHandler(async (req, res) => {
-  const sellerList = await SellerModel.find()
-    .select("-password")
-    .select("-isActive");
+const getSellers = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
 
-  return res.status(200).json({ sellerList });
+  if (!errors.isEmpty()) {
+    res.status(400);
+    return res.json({ errors: errors.array() });
+  }
+
+  const sellers = await SellerModel.find().select("-password");
+
+  return res.status(200).json({ sellers });
 });
 
 const getCustomers = asyncHandler(async (req, res) => {
@@ -105,7 +110,7 @@ export {
   getCategoryAdmin,
   getProducts,
   getAdminList,
-  getSellerList,
+  getSellers,
   getCustomers,
   getStatistics,
   getBusinessCategory,

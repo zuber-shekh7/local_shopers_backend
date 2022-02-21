@@ -5,10 +5,10 @@ import {
   getAdminList,
   getCategoryAdmin,
   getProducts,
-  getSellerList,
   getBusinessCategory,
   getStatistics,
   getCustomers,
+  getSellers,
 } from "../controllers/adminControllers.js";
 import {
   allowAdminOnly,
@@ -35,7 +35,7 @@ router.post("/get", [], getStatistics);
 
 router.post("/getcategories", [], getCategoryAdmin);
 
-router.post("/getseller", [], getSellerList);
+router.get("/sellers", [authenticate, allowAdminOnly], getSellers);
 
 router.get("/customers", [authenticate, allowAdminOnly], getCustomers);
 
