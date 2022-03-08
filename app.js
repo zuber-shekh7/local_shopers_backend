@@ -41,11 +41,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// constants
-const HOST = process.env.HOST;
-const PORT = process.env.PORT || 4000;
-const NODE_ENV = process.env.NODE_ENV;
-
 // routes
 app.use("/api", coreRoutes);
 app.use("/api/admin", adminRoutes);
@@ -65,9 +60,4 @@ app.use(notFoundMiddleware);
 // error handler middleware
 app.use(errorHandler);
 
-// listen
-app.listen(PORT, () => {
-  console.log(
-    `Server is running in ${NODE_ENV} mode on ${HOST}:${PORT}`.blue.bold
-  );
-});
+export default app;
