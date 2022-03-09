@@ -89,15 +89,9 @@ const getUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
+  const id = req.params.userId;
 
-  if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
-  }
-
-  const id = req.params.user_id;
-
+  // validating userId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
       message: "invalid user id",
@@ -107,6 +101,7 @@ const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(id).select("-password");
 
   if (user) {
+    // updating user fields
     user.firstName = req.body.firstName || user.firstName;
     user.lastName = req.body.lastName || user.lastName;
     user.email = req.body.email || user.email;

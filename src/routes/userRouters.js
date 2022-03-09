@@ -48,17 +48,7 @@ router.post(
 
 router.get("/:userId", [authenticate], getUser);
 
-router.put(
-  "/:user_id",
-  [
-    authenticate,
-    body("firstName").not().isEmpty().isString(),
-    body("lastName").not().isEmpty().isString(),
-    body("email").not().isEmpty().isEmail(),
-    body("mobile").not().isEmpty().isString(),
-  ],
-  updateUser
-);
+router.put("/:userId", [authenticate], updateUser);
 
 router.post(
   "/login/google",
