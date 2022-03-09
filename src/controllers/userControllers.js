@@ -1,36 +1,36 @@
-import User from "../models/UserModel.js";
+import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
-import { validationResult } from "express-validator";
 import { OAuth2Client } from "google-auth-library";
-import mongoose from "mongoose";
+import { validationResult } from "express-validator";
+
+import User from "../models/UserModel.js";
 
 const userLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating user inputs
   if (!errors.isEmpty()) {
     res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
   const { email, password } = req.body;
 
   const user = await User.findOne({ email: email });
 
+  // validating user
   if (user && (await user.authenticate(password))) {
-    const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
-      process.env.SECRET,
-      { expiresIn: "30d" }
-    );
+    const token = await user.generateJWTToken();
 
-    return res.json({
+    return res.status(200).json({
       user: await User.findById(user._id).select("-password"),
       token,
     });
   }
 
-  return res.status(400).json({
+  return res.status(401).json({
     message: "Invalid email or password",
   });
 });
