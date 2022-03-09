@@ -46,7 +46,7 @@ router.post(
   userSignup
 );
 
-router.get("/:user_id", [authenticate], getUser);
+router.get("/:userId", [authenticate], getUser);
 
 router.put(
   "/:user_id",

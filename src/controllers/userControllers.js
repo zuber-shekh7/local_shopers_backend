@@ -68,8 +68,9 @@ const userSignup = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
-  const id = req.params.user_id;
+  const id = req.params.userId;
 
+  // validating userId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
       message: "invalid user id",
