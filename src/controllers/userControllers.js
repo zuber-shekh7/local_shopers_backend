@@ -38,25 +38,25 @@ const userLogin = asyncHandler(async (req, res) => {
 const userSignup = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating user inputs
   if (!errors.isEmpty()) {
     res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const { firstName, lastName, email, password } = req.body;
+  const { email, password } = req.body;
 
-  const existUser = await User.findOne({ email: email });
+  const existingUser = await User.findOne({ email: email });
 
-  if (existUser) {
-    res.status(400);
-    return res.json({
+  // checking for existing user
+  if (existingUser) {
+    return res.status(401).json({
       message: `User with email ${email} is already exists`,
     });
   }
 
   const user = await User.create({
-    firstName,
-    lastName,
     email,
     password,
   });
