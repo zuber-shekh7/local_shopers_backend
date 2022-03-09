@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
-import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import { validationResult } from "express-validator";
 
@@ -120,14 +119,16 @@ const updateUser = asyncHandler(async (req, res) => {
 const googleAuthentication = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating inputs
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const token = req.body.token;
   const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID);
 
+  // validating token and generating ticket
   const ticket = await client.verifyIdToken({
     idToken: token,
     audience: process.env.GOOGLE_OAUTH_CLIENT_ID,
@@ -144,16 +145,13 @@ const googleAuthentication = asyncHandler(async (req, res) => {
     const existuser = await User.findOne({ email: email }).select("-password");
 
     if (existuser) {
-      const token = jwt.sign(
-        { id: existuser._id, isAdmin: existuser.isAdmin },
-        process.env.SECRET,
-        { expiresIn: "30d" }
-      );
-
+      const token = await existuser.generateJWTToken();
       return res.json({ token, user: existuser });
     }
 
+    // creating password for google auth user
     const password = email + process.env.SECRET;
+
     const user = await User.create({
       firstName,
       lastName,
@@ -161,20 +159,17 @@ const googleAuthentication = asyncHandler(async (req, res) => {
       password,
     });
 
-    const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
-      process.env.SECRET,
-      { expiresIn: "30d" }
-    );
+    const token = await user.generateJWTToken();
 
     return res.json({
-      token,
       user: await User.findById(user._id).select("-password"),
+      token,
     });
   }
 
   return res.status(400).json({
-    message: "Your email address in not verified, please verify you email.",
+    message:
+      "Your email address in not verified, please verify you email with google.",
   });
 });
 
