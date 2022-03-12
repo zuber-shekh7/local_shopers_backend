@@ -9,11 +9,11 @@ const getWishList = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const id = req.query.user_id;
+  const id = req.query.userId;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
@@ -50,30 +50,30 @@ const addToWishList = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const wish_list_id = req.body.wish_list_id;
-  const product_id = req.body.product_id;
+  const wishlistId = req.body.wishlistId;
+  const productId = req.body.productId;
 
-  if (!mongoose.Types.ObjectId.isValid(wish_list_id)) {
+  if (!mongoose.Types.ObjectId.isValid(wishlistId)) {
     return res.status(400).json({
-      message: "Invalid wish list id",
+      message: "Invalid wishlist id",
     });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(product_id)) {
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
     return res.status(400).json({
       message: "Invalid product id",
     });
   }
 
-  const wishList = await WishList.findById(wish_list_id).populate("products");
+  const wishList = await WishList.findById(wishlistId).populate("products");
 
   if (wishList) {
     const existProduct = await wishList.products.filter((product) => {
-      if (product._id.toString() === product_id) {
+      if (product._id.toString() === productId) {
         return product;
       }
     });
@@ -84,7 +84,7 @@ const addToWishList = asyncHandler(async (req, res) => {
       });
     }
 
-    const product = await Product.findById(product_id);
+    const product = await Product.findById(productId);
 
     if (product) {
       wishList.products.push(product);
@@ -106,29 +106,29 @@ const removeFromWishList = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const wish_list_id = req.body.wish_list_id;
-  const product_id = req.body.product_id;
+  const wishlistId = req.body.wishlistId;
+  const productId = req.body.productId;
 
-  if (!mongoose.Types.ObjectId.isValid(wish_list_id)) {
+  if (!mongoose.Types.ObjectId.isValid(wishlistId)) {
     return res.status(400).json({
       message: "Invalid wish list id",
     });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(product_id)) {
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
     return res.status(400).json({
       message: "Invalid product id",
     });
   }
 
-  const wishList = await WishList.findById(wish_list_id).populate("products");
+  const wishList = await WishList.findById(wishlistId).populate("products");
 
   if (wishList) {
-    const product = await Product.findById(product_id);
+    const product = await Product.findById(productId);
 
     if (product) {
       wishList.products.pull(product);

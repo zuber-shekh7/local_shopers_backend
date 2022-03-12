@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get(
   "/",
-  [authenticate, query("user_id").exists().notEmpty().isString()],
+  [authenticate, query("userId").exists().notEmpty().isString()],
   getWishList
 );
 
@@ -19,8 +19,8 @@ router.post(
   "/",
   [
     authenticate,
-    body("wish_list_id").exists().notEmpty().isString(),
-    body("product_id").exists().notEmpty().isString(),
+    body("wishlistId").exists().notEmpty().isString(),
+    body("productId").exists().notEmpty().isString(),
   ],
   addToWishList
 );
@@ -29,8 +29,8 @@ router.delete(
   "/",
   [
     authenticate,
-    body("wish_list_id").exists().notEmpty().isString(),
-    body("product_id").exists().notEmpty().isString(),
+    body("wishlistId").exists().notEmpty().isString(),
+    body("productId").exists().notEmpty().isString(),
   ],
   removeFromWishList
 );
