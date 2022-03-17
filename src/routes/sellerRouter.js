@@ -17,8 +17,16 @@ const router = express.Router();
 router.post(
   "/login",
   [
-    body("email").notEmpty().isString().isEmail(),
-    body("password").notEmpty().isString(),
+    body("email")
+      .notEmpty()
+      .withMessage("email cannot be an empty field.")
+      .isEmail()
+      .withMessage("email is invalid, enter valid email."),
+    body("password")
+      .notEmpty()
+      .withMessage("password cannot be an empty field.")
+      .isString()
+      .withMessage("password must be valid string."),
   ],
   sellerLogin
 );

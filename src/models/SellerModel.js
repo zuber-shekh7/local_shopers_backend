@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const SellerSchema = mongoose.Schema(
   {
@@ -45,6 +46,12 @@ const SellerSchema = mongoose.Schema(
 
 SellerSchema.methods.authenticate = async function (password) {
   return await bcrypt.compareSync(password, this.password);
+};
+
+SellerSchema.methods.generateJWTToken = async function () {
+  return jwt.sign({ id: this._id }, process.env.SECRET, {
+    expiresIn: "30d",
+  });
 };
 
 SellerSchema.pre("save", async function (next) {

@@ -8,20 +8,19 @@ import mongoose from "mongoose";
 const sellerLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating input
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
   const { email, password } = req.body;
-  const seller = await Seller.findOne({ email: email, isSeller: true });
 
+  const seller = await Seller.findOne({ email: email });
+
+  // authenticating seller
   if (seller && (await seller.authenticate(password))) {
-    const token = jwt.sign(
-      { id: seller._id, isSeller: true },
-      process.env.SECRET,
-      { expiresIn: "30d" }
-    );
+    const token = await seller.generateJWTToken();
 
     return res.json({
       seller: await Seller.findById(seller._id).select("-password"),
