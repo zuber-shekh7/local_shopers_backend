@@ -34,10 +34,16 @@ router.post(
 router.post(
   "/signup",
   [
-    body("firstName").notEmpty().isString(),
-    body("lastName").notEmpty().isString(),
-    body("email").notEmpty().isEmail(),
-    body("password").notEmpty().isString(),
+    body("email")
+      .notEmpty()
+      .withMessage("email cannot be an empty field.")
+      .isEmail()
+      .withMessage("email is invalid, enter valid email."),
+    body("password")
+      .notEmpty()
+      .withMessage("password cannot be an empty field.")
+      .isString()
+      .withMessage("password must be valid string."),
   ],
   sellerSignup
 );

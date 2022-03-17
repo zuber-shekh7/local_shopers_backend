@@ -36,15 +36,17 @@ const sellerLogin = asyncHandler(async (req, res) => {
 const sellerSignup = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating input
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const { firstName, lastName, email, password } = req.body;
+  const { email, password } = req.body;
 
   const existSeller = await Seller.findOne({ email: email });
 
+  // checking for existing seller
   if (existSeller) {
     res.status(400);
     return res.json({
@@ -52,16 +54,15 @@ const sellerSignup = asyncHandler(async (req, res) => {
     });
   }
 
-  await Seller.create({
-    firstName,
-    lastName,
+  // creating new seller
+  const seller = await Seller.create({
     email,
     password,
   });
 
-  res.status(201);
-  return res.json({
-    message: "Account Created Successfully",
+  return res.status(201).json({
+    seller: await Seller.findById(seller._id).select("-password"),
+    token: await seller.generateJWTToken(),
   });
 });
 
