@@ -32,15 +32,15 @@ const getUserOrders = asyncHandler(async (req, res) => {
 });
 
 const getSellerOrders = asyncHandler(async (req, res) => {
-  const { business_id } = req.query;
+  const { businessId } = req.query;
 
-  if (!mongoose.Types.ObjectId.isValid(business_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessId)) {
     return res.status(400).json({
       message: "Invalid business id",
     });
   }
 
-  const business = await Business.findById(business_id);
+  const business = await Business.findById(businessId);
 
   if (!business) {
     return res.status(400).json({
