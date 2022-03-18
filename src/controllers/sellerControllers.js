@@ -70,11 +70,11 @@ const getSeller = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ errorr: msg });
   }
 
-  const id = req.params.seller_id;
+  const id = req.params.sellerId;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(400);

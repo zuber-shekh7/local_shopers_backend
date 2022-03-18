@@ -23,22 +23,25 @@ const authenticate = (req, res, next) => {
 };
 
 const authenticateSeller = (req, res, next) => {
-  const token = req.headers.authorization;
+  let token = req.headers.authorization;
 
-  if (!token) {
+  // validating bearer token
+  if (!token || !token.startsWith("Bearer")) {
     return res
       .status(403)
       .json({ message: "A Token is required for authentication" });
   }
 
+  token = token.split(" ")[1];
+
   try {
+    // decoding jwt token
     const decoded = jwt.verify(token, process.env.SECRET);
     req.seller = decoded;
+    return next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid token" });
   }
-
-  return next();
 };
 
 const allowAdminOnly = (req, res, next) => {
@@ -56,7 +59,7 @@ const allowAdminOnly = (req, res, next) => {
 const allowSellerOnly = (req, res, next) => {
   const seller = req.seller;
 
-  if (seller && seller.isSeller) {
+  if (seller) {
     return next();
   }
 

@@ -54,7 +54,7 @@ router.post(
   googleAuthentication
 );
 
-router.get("/:seller_id", [authenticateSeller, allowSellerOnly], getSeller);
+router.get("/:sellerId", [authenticateSeller, allowSellerOnly], getSeller);
 
 router.put("/:seller_id", [authenticateSeller, allowSellerOnly], updateSeller);
 
