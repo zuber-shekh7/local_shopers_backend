@@ -116,3 +116,29 @@ paths:
                   token:
                     type: string
                     example: "textThatNoOneCanUnderstandExceptComputer"
+
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: "returns an user object"
+      parameters:
+        - name: userId
+          required: true
+          description: user id
+          in: path
+      responses:
+        200:
+          description: "returns an object"
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+                example: "zuber"
+              lastName:
+                type: string
+                example: "shekh"
+              email:
+                type: string
+                example: "zuber@example.com"
