@@ -11,7 +11,9 @@ servers:
 paths:
   /hello:
     get:
-      summary: "return greet message"
+      tags:
+        - Core
+      summary: "Greets the user"
       responses:
         "200":
           description: "return an object"
@@ -27,7 +29,7 @@ paths:
     post:
       tags:
         - Users
-      summary: "returns an object containing user object and token"
+      summary: "User login"
       consumes: application/json
       produces: application/json
       requestBody:
@@ -74,7 +76,7 @@ paths:
     post:
       tags:
         - Users
-      summary: "returns an object containing user object and token"
+      summary: "User signup"
       consumes: application/json
       produces: application/json
       requestBody:
@@ -121,7 +123,7 @@ paths:
     get:
       tags:
         - Users
-      summary: "returns an user object"
+      summary: "Get unique user"
       parameters:
         - name: userId
           required: true
