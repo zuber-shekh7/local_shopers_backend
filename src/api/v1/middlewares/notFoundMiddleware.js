@@ -4,4 +4,4 @@ const notFoundMiddleware = (req, res) => {
   });
 };
 
-export default notFoundMiddleware;
+export { notFoundMiddleware };

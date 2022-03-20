@@ -6,22 +6,11 @@ import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
-import db from "./src/config/db.js";
+import db from "./src/api/v1/config/db.js";
+import * as v1 from "./src/api/v1/routes/index.js";
 
-import coreRoutes from "./src/routes/coreRoutes.js";
-import userRoutes from "./src/routes/userRouters.js";
-import sellerRoutes from "./src/routes/sellerRouter.js";
-import adminRoutes from "./src/routes/adminRoutes.js";
-import categoryRoutes from "./src/routes/categoriesRoutes.js";
-import productRoutes from "./src/routes/productRoutes.js";
-import businessRoutes from "./src/routes/businessRoutes.js";
-import businessCategoryRoutes from "./src/routes/businessCategoryRoutes.js";
-import wishListRoutes from "./src/routes/wishListRoutes.js";
-import addressRoutes from "./src/routes/addressRoutes.js";
-import orderRoutes from "./src/routes/orderRoutes.js";
-
-import { errorHandler } from "./src/middlewares/errorMiddlewares.js";
-import notFoundMiddleware from "./src/middlewares/notFoundMiddleware.js";
+import { errorHandler } from "./src/api/v1/middlewares/errorMiddlewares.js";
+import { notFoundMiddleware } from "./src/api/v1/middlewares/notFoundMiddleware.js";
 
 // initialization
 const app = express();
@@ -45,18 +34,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // routes
-app.use("/api", coreRoutes);
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use("/api/admin", adminRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/sellers", sellerRoutes);
-app.use("/api/business", businessRoutes);
-app.use("/api/business-categories", businessCategoryRoutes);
-app.use("/api/categories", categoryRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/wishlists", wishListRoutes);
-app.use("/api/addresses", addressRoutes);
-app.use("/api/orders", orderRoutes);
+app.use("/api/v1/", v1.coreRoutes);
+app.use("/api/v1/admin", v1.adminRoutes);
+app.use("/api/v1/addresses", v1.addressRoutes);
+app.use("/api/v1/business", v1.businessRoutes);
+app.use("/api/v1/business-categories", v1.businessCategoryRoutes);
+app.use("/api/v1/categories", v1.categoriesRoutes);
+app.use("/api/v1/orders", v1.orderRoutes);
+app.use("/api/v1/products", v1.productRoutes);
+app.use("/api/v1/sellers", v1.sellerRoutes);
+app.use("/api/v1/users", v1.userRoutes);
+app.use("/api/v1/wishlists", v1.wishlistRoutes);
 
 // not found middleware
 app.use(notFoundMiddleware);
