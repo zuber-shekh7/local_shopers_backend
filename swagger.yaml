@@ -22,3 +22,50 @@ paths:
                 properties:
                   message:
                     type: string
+
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: "returns an object containing user object and token"
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+
+        description: email address
+        in: body
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                        example: "zuber"
+                      lastName:
+                        type: string
+                        example: "shekh"
+                      email:
+                        type: string
+                        example: "zuber@example.com"
+                  token:
+                    type: string
+                    example: "textThatNoOneCanUnderstandExceptComputer"
