@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import colors from "colors";
 import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
 
 import db from "./src/config/db.js";
 
@@ -24,6 +26,7 @@ import notFoundMiddleware from "./src/middlewares/notFoundMiddleware.js";
 // initialization
 const app = express();
 dotenv.config();
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 // database connection
 try {
@@ -43,6 +46,7 @@ app.use(cors());
 
 // routes
 app.use("/api", coreRoutes);
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/sellers", sellerRoutes);
