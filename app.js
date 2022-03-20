@@ -15,7 +15,7 @@ import { notFoundMiddleware } from "./src/api/v1/middlewares/notFoundMiddleware.
 // initialization
 const app = express();
 dotenv.config();
-const swaggerDocument = YAML.load("./swagger.yaml");
+const swaggerDocument = YAML.load("./src/api/v1/swagger/documentation.yaml");
 
 // database connection
 try {
@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // routes
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api/docs/v1", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/v1/", v1.coreRoutes);
 app.use("/api/v1/admin", v1.adminRoutes);
 app.use("/api/v1/addresses", v1.addressRoutes);
