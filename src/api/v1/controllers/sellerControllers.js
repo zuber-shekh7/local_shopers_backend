@@ -168,12 +168,13 @@ const googleAuthentication = asyncHandler(async (req, res) => {
 const updateSeller = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating input
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const id = req.params.seller_id;
+  const id = req.params.sellerId;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({

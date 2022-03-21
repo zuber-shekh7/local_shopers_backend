@@ -56,6 +56,6 @@ router.post(
 
 router.get("/:sellerId", [authenticateSeller, allowSellerOnly], getSeller);
 
-router.put("/:seller_id", [authenticateSeller, allowSellerOnly], updateSeller);
+router.put("/:sellerId", [authenticateSeller, allowSellerOnly], updateSeller);
 
 export default router;
