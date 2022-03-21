@@ -435,3 +435,174 @@ paths:
                       description:
                         type: string
                         example: "Authorised Reseller of Apple"
+
+  /addresses:
+    post:
+      tags:
+        - Address
+      summary: "Create address"
+      security:
+        - bearerAuth: []
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                fullName:
+                  type: string
+                mobileNumber:
+                  type: string
+                pincode:
+                  type: string
+                flatNo:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                street:
+                  type: string
+                landmark:
+                  type: string
+
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      fullName:
+                        type: string
+                      mobileNumber:
+                        type: string
+                      pincode:
+                        type: string
+                      flatNo:
+                        type: string
+                      city:
+                        type: string
+                      state:
+                        type: string
+                      street:
+                        type: string
+                      landmark:
+                        type: string
+
+  /addresses/{addressId}:
+    get:
+      tags:
+        - Address
+      summary: "Get unique address"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: addressId
+          required: true
+          description: address id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      fullName:
+                        type: string
+                      mobileNumber:
+                        type: string
+                      pincode:
+                        type: string
+                      flatNo:
+                        type: string
+                      city:
+                        type: string
+                      state:
+                        type: string
+                      street:
+                        type: string
+                      landmark:
+                        type: string
+
+    put:
+      tags:
+        - Address
+      summary: "Edit an address"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: addressId
+          required: true
+          description: address id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      fullName:
+                        type: string
+                      mobileNumber:
+                        type: string
+                      pincode:
+                        type: string
+                      flatNo:
+                        type: string
+                      city:
+                        type: string
+                      state:
+                        type: string
+                      street:
+                        type: string
+                      landmark:
+                        type: string
+
+    delete:
+      tags:
+        - Address
+      summary: "Delete an address"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: addressId
+          required: true
+          description: address id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Address deleted successfully
