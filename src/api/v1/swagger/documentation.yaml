@@ -8,6 +8,12 @@ servers:
   - url: http://localhost:4000/api/v1/
     description: local server of our backend service.
 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
 paths:
   /hello:
     get:
@@ -124,23 +130,28 @@ paths:
       tags:
         - Users
       summary: "Get unique user"
+      security:
+        - bearerAuth: []
       parameters:
         - name: userId
           required: true
           description: user id
           in: path
       responses:
-        200:
+        "200":
           description: "returns an object"
-          schema:
-            type: object
-            properties:
-              firstName:
-                type: string
-                example: "zuber"
-              lastName:
-                type: string
-                example: "shekh"
-              email:
-                type: string
-                example: "zuber@example.com"
+
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                    example: "zuber"
+                  lastName:
+                    type: string
+                    example: "shekh"
+                  email:
+                    type: string
+                    example: "zuber@example.com"
