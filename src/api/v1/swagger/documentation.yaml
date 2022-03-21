@@ -183,3 +183,156 @@ paths:
                   email:
                     type: string
                     example: "zuber@example.com"
+
+  /sellers/login:
+    post:
+      tags:
+        - Sellers
+      summary: "Seller login"
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+
+        description: email address
+        in: body
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  seller:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                        example: "zuber"
+                      lastName:
+                        type: string
+                        example: "shekh"
+                      email:
+                        type: string
+                        example: "zuber@example.com"
+                  token:
+                    type: string
+                    example: "textThatNoOneCanUnderstandExceptComputer"
+
+  /sellers/signup:
+    post:
+      tags:
+        - Sellers
+      summary: "Seller signup"
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+
+        description: email address
+        in: body
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  seller:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                        example: "zuber"
+                      lastName:
+                        type: string
+                        example: "shekh"
+                      email:
+                        type: string
+                        example: "zuber@example.com"
+                  token:
+                    type: string
+                    example: "textThatNoOneCanUnderstandExceptComputer"
+
+  /sellers/{sellerId}:
+    get:
+      tags:
+        - Sellers
+      summary: "Get unique seller"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: sellerId
+          required: true
+          description: seller id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                    example: "zuber"
+                  lastName:
+                    type: string
+                    example: "shekh"
+                  email:
+                    type: string
+                    example: "zuber@example.com"
+
+    put:
+      tags:
+        - Sellers
+      summary: "Update seller"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: sellerId
+          required: true
+          description: seller id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                    example: "zuber"
+                  lastName:
+                    type: string
+                    example: "shekh"
+                  email:
+                    type: string
+                    example: "zuber@example.com"
