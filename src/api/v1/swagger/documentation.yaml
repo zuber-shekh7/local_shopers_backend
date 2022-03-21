@@ -336,3 +336,102 @@ paths:
                   email:
                     type: string
                     example: "zuber@example.com"
+
+  /business:
+    post:
+      tags:
+        - Business
+      summary: "Create business"
+      security:
+        - bearerAuth: []
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                businessCategoryId:
+                  type: string
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  business:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "iVenus"
+                      description:
+                        type: string
+                        example: "Authorised Reseller of Apple"
+
+  /business/{businessId}:
+    get:
+      tags:
+        - Business
+      summary: "Get unique business"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: businessId
+          required: true
+          description: business id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  business:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "iVenus"
+                      description:
+                        type: string
+                        example: "Authorised Reseller of Apple"
+
+    put:
+      tags:
+        - Business
+      summary: "Update business"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: businessId
+          required: true
+          description: business id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  business:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "iVenus"
+                      description:
+                        type: string
+                        example: "Authorised Reseller of Apple"

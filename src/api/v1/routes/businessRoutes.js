@@ -16,7 +16,7 @@ const router = express.Router();
 const upload = multer();
 
 router.post(
-  "/new",
+  "",
   [
     authenticateSeller,
     allowSellerOnly,
