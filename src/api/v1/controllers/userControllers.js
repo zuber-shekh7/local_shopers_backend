@@ -4,6 +4,7 @@ import { OAuth2Client } from "google-auth-library";
 import { validationResult } from "express-validator";
 
 import User from "../models/UserModel.js";
+import { setCookie } from "../utils/coookieHelper.js";
 
 const userLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -23,8 +24,10 @@ const userLogin = asyncHandler(async (req, res) => {
   if (user && (await user.authenticate(password))) {
     const token = await user.generateJWTToken();
 
+    setCookie(token, res);
+
     return res.status(200).json({
-      user: await User.findById(user._id).select("-password"),
+      user: await User.findById(user._id),
       token,
     });
   }
@@ -60,9 +63,13 @@ const userSignup = asyncHandler(async (req, res) => {
     password,
   });
 
-  res.status(201);
-  return res.json({
-    user: await User.findById(user._id).select("-password"),
+  const token = await user.generateJWTToken();
+
+  setCookie(token, res);
+
+  return res.status(200).json({
+    user: await User.findById(user._id),
+    token,
   });
 });
 
