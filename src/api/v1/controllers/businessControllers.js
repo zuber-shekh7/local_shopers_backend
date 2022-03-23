@@ -75,6 +75,9 @@ const createBusiness = asyncHandler(async (req, res) => {
   });
 
   seller.business = business._id;
+  business.seller = seller._id;
+
+  await business.save();
   await seller.save();
 
   return res.status(201).json({
@@ -95,6 +98,7 @@ const getBusiness = asyncHandler(async (req, res) => {
   const business = await Business.findById(businessId).populate([
     "category",
     "categories",
+    "seller",
   ]);
 
   if (business) {
