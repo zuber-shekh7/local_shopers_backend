@@ -88,26 +88,29 @@ const getCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
-  const category_id = req.params.category_id;
+  const categoryId = req.params.categoryId;
 
-  if (!mongoose.Types.ObjectId.isValid(category_id)) {
+  if (!mongoose.Types.ObjectId.isValid(categoryId)) {
     return res.status(400).json({
-      messsage: "Invalid category id",
+      message: "Invalid category id",
     });
   }
 
-  const category = await Category.findById(category_id).populate("products");
+  const category = await Category.findById(categoryId).populate([
+    "products",
+    "business",
+  ]);
 
   if (category) {
     return res.status(200).json({ category });
   }
 
   return res.status(400).json({
-    messsage: "Invalid category id",
+    message: "Invalid category id",
   });
 });
 

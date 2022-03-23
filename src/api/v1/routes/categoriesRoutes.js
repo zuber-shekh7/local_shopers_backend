@@ -39,8 +39,8 @@ router.post(
 );
 
 router.get(
-  "/:category_id",
-  [param("category_id").exists().notEmpty().isString()],
+  "/:categoryId",
+  [param("categoryId").exists().notEmpty().isString()],
   getCategory
 );
 
