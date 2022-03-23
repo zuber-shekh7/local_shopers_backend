@@ -28,14 +28,14 @@ router.post(
   createBusinessCategory
 );
 
-router.get("/:category_id", [authenticate], getBusinessCategory);
+router.get("/:businessCategoryId", [authenticate], getBusinessCategory);
 
 router.put(
-  "/:category_id",
+  "/:businessCategoryId",
   [authenticate, upload.single("image")],
   editBusinessCategory
 );
 
-router.delete("/:category_id", [authenticate], deleteBusinessCategory);
+router.delete("/:businessCategoryId", [authenticate], deleteBusinessCategory);
 
 export default router;

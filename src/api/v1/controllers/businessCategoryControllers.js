@@ -58,20 +58,21 @@ const createBusinessCategory = asyncHandler(async (req, res) => {
 const getBusinessCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
-  const { category_id } = req.params;
+  const { businessCategoryId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(category_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessCategoryId)) {
     return res.status(400).json({
       message: "Invalid business category id",
     });
   }
 
-  const category = await BusinessCategory.findById(category_id);
+  const category = await BusinessCategory.findById(businessCategoryId);
 
   if (category) {
     return res.json({
@@ -87,20 +88,21 @@ const getBusinessCategory = asyncHandler(async (req, res) => {
 const editBusinessCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
-  const { category_id } = req.params;
+  const { businessCategoryId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(category_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessCategoryId)) {
     return res.status(400).json({
       message: "Invalid business category id",
     });
   }
 
-  const category = await BusinessCategory.findById(category_id);
+  const category = await BusinessCategory.findById(businessCategoryId);
 
   if (category) {
     const name = req.body.name || category.name;
@@ -135,26 +137,27 @@ const editBusinessCategory = asyncHandler(async (req, res) => {
 const deleteBusinessCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
-  const { category_id } = req.params;
+  const { businessCategoryId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(category_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessCategoryId)) {
     return res.status(400).json({
       message: "Invalid business category id",
     });
   }
 
-  const category = await BusinessCategory.findById(category_id);
+  const category = await BusinessCategory.findById(businessCategoryId);
 
   if (category) {
     await category.delete();
 
     return res.json({
-      message: "Successfully deleted business category",
+      message: "Business category delete successfully",
     });
   }
 
