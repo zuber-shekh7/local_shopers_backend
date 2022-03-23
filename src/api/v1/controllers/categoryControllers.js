@@ -71,7 +71,7 @@ const createCategory = asyncHandler(async (req, res) => {
     });
 
     business.categories.push(category);
-    category.businesses.push(business);
+    category.business = business._id;
 
     await business.save();
     await category.save();
