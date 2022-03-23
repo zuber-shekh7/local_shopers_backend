@@ -33,7 +33,13 @@ if (process.env.NODE_ENV !== "production") {
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.ORIGIN,
+    preflightContinue: true,
+    credentials: true,
+  })
+);
 
 // routes
 app.use("/api/docs/v1", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
