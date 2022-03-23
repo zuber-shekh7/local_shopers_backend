@@ -31,8 +31,8 @@ router.post(
 );
 
 router.get(
-  "/:product_id",
-  [param("product_id").exists().notEmpty().isString()],
+  "/:productId",
+  [param("productId").exists().notEmpty().isString()],
   getProduct
 );
 

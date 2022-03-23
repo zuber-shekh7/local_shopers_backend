@@ -64,19 +64,19 @@ const getProduct = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
-  const product_id = req.params.product_id;
+  const productId = req.params.productId;
 
-  if (!mongoose.Types.ObjectId.isValid(product_id)) {
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
     return res.status(400).json({
       message: "Invalid product id",
     });
   }
 
-  const product = await Product.findById(product_id);
+  const product = await Product.findById(productId).populate("category");
 
   if (product) {
     return res.status(200).json({ product });
