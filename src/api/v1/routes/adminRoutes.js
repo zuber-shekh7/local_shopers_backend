@@ -10,6 +10,7 @@ import {
   getCustomers,
   getSellers,
   adminLogout,
+  addAdmin,
 } from "../controllers/adminControllers.js";
 import {
   allowAdminOnly,
@@ -37,6 +38,19 @@ router.post(
 );
 
 router.get("/logout", [authenticateAdmin], adminLogout);
+
+router.post(
+  "/add",
+  [
+    authenticateAdmin,
+    body("email")
+      .notEmpty()
+      .withMessage("email cannot be an empty field.")
+      .isEmail()
+      .withMessage("email is invalid, enter valid email."),
+  ],
+  addAdmin
+);
 
 router.post(
   "/getproducts",

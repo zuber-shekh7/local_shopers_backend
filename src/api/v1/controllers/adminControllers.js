@@ -7,6 +7,7 @@ import UserModel from "../models/UserModel.js";
 import BusinessCategoryModel from "../models/BusinessCategoryModel.js";
 import Admin from "../models/AdminModel.js";
 import ProductModel from "../models/ProductModel.js";
+import { generateRandomPassword } from "../utils/passwordHelper.js";
 
 const adminLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -27,7 +28,7 @@ const adminLogin = asyncHandler(async (req, res) => {
     });
 
     return res.json({
-      user: await Admin.findById(user._id),
+      admin: await Admin.findById(admin._id),
       token,
     });
   }
@@ -42,6 +43,35 @@ const adminLogout = asyncHandler(async (req, res) => {
   return res.status(200).json({
     message: "Admin logged out successfully",
   });
+});
+
+const addAdmin = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  // input validation
+  if (!errors.isEmpty()) {
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
+  }
+
+  const { email } = req.body;
+
+  const existAdmin = await Admin.findOne({ email });
+
+  if (existAdmin) {
+    return res.status(400).json({
+      message: `Admin account for this ${email} is already exists`,
+    });
+  }
+
+  const password = generateRandomPassword();
+
+  const admin = await Admin.create({
+    email,
+    password,
+  });
+
+  return res.status(201).json({ admin });
 });
 
 const getCategoryAdmin = asyncHandler(async (req, res) => {
@@ -114,6 +144,7 @@ const getStatistics = asyncHandler(async (req, res) => {
 export {
   adminLogin,
   adminLogout,
+  addAdmin,
   getCategoryAdmin,
   getProducts,
   getAdminList,
