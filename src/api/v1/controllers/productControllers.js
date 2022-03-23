@@ -8,20 +8,21 @@ import { uploadFile } from "../config/s3.js";
 const createProduct = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
-  const category_id = req.body.category_id;
+  const categoryId = req.body.categoryId;
 
-  if (!mongoose.Types.ObjectId.isValid(category_id)) {
+  if (!mongoose.Types.ObjectId.isValid(categoryId)) {
     return res.status(400).json({
       message: "Invalid category id",
     });
   }
 
-  const category = await Category.findById(category_id);
+  const category = await Category.findById(categoryId);
 
   if (category) {
     const { name, description, price, quantity, unit } = req.body;
@@ -46,8 +47,10 @@ const createProduct = asyncHandler(async (req, res) => {
     });
 
     category.products.push(product);
+    product.category = category._id;
 
     await category.save();
+    await product.save();
 
     return res.status(201).json({ product });
   }

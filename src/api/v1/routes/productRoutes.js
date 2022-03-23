@@ -21,7 +21,7 @@ router.post(
     authenticateSeller,
     allowSellerOnly,
     upload.single("image"),
-    body("category_id").exists().notEmpty().isString(),
+    body("categoryId").exists().notEmpty().isString(),
     body("name").exists().notEmpty().isString(),
     body("description").exists().notEmpty().isString(),
     body("price").exists().notEmpty().isDecimal(),
