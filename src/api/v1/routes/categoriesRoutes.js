@@ -21,7 +21,7 @@ router.get(
   [
     authenticateSeller,
     allowSellerOnly,
-    query("business_id").exists().notEmpty().isString(),
+    query("businessId").exists().notEmpty().isString(),
   ],
   getCategories
 );

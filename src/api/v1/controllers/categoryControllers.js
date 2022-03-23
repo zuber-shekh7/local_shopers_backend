@@ -8,27 +8,28 @@ import { uploadFile } from "../config/s3.js";
 const getCategories = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
-  const business_id = req.query.business_id;
+  const businessId = req.query.businessId;
 
-  if (!mongoose.Types.ObjectId.isValid(business_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessId)) {
     return res.status(400).json({
       messsage: "Invalid business id",
     });
   }
 
-  const business = await Business.findById(business_id).populate("categories");
+  const business = await Business.findById(businessId).populate("categories");
 
   if (business) {
-    return res.status(201).json({ categories: business.categories });
+    return res.status(200).json({ categories: business.categories });
   }
 
   return res.status(400).json({
-    messsage: "Invalid business id",
+    message: "Invalid business id",
   });
 });
 
