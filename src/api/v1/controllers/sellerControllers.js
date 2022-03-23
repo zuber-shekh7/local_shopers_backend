@@ -207,10 +207,18 @@ const updateSeller = asyncHandler(async (req, res) => {
   return res.status(400).json({ message: "Invalid seller id" });
 });
 
+const sellerLogout = asyncHandler(async (req, res) => {
+  res.clearCookie("token");
+  return res.status(200).json({
+    message: "Seller logged out successfully",
+  });
+});
+
 export {
   sellerLogin,
   sellerSignup,
   googleAuthentication,
   getSeller,
   updateSeller,
+  sellerLogout,
 };

@@ -3,6 +3,7 @@ import {
   getSeller,
   googleAuthentication,
   sellerLogin,
+  sellerLogout,
   sellerSignup,
   updateSeller,
 } from "../controllers/sellerControllers.js";
@@ -53,6 +54,8 @@ router.post(
   [body("token").exists().notEmpty().isString()],
   googleAuthentication
 );
+
+router.get("/logout", [authenticateSeller], sellerLogout);
 
 router.get("/:sellerId", [authenticateSeller, allowSellerOnly], getSeller);
 
