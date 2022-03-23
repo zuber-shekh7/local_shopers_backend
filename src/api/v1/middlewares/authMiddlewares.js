@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 const authenticate = (req, res, next) => {
   let token = req.headers.authorization;
-  console.log("token", token, req.headers);
+
   // validating bearer token
   if (!token || !token.startsWith("Bearer")) {
     return res
