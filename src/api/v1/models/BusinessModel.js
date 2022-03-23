@@ -16,6 +16,10 @@ const BusinessSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Seller",
+    },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "BusinessCategory",
