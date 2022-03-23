@@ -32,7 +32,7 @@ router.post(
     authenticateSeller,
     allowSellerOnly,
     upload.single("image"),
-    body("business_id").exists().notEmpty().isString(),
+    body("businessId").exists().notEmpty().isString(),
     body("name").exists().notEmpty().isString(),
   ],
   createCategory

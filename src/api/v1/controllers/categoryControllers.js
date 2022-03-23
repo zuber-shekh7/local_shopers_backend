@@ -35,20 +35,21 @@ const getCategories = asyncHandler(async (req, res) => {
 const createCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const business_id = req.body.business_id;
+  const businessId = req.body.businessId;
 
-  if (!mongoose.Types.ObjectId.isValid(business_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessId)) {
     return res.status(400).json({
       messsage: "Invalid business id",
     });
   }
 
-  const business = await Business.findById(business_id);
+  const business = await Business.findById(businessId);
 
   if (business) {
     const name = req.body.name;
@@ -69,8 +70,10 @@ const createCategory = asyncHandler(async (req, res) => {
     });
 
     business.categories.push(category);
+    category.businesses.push(business);
 
     await business.save();
+    await category.save();
 
     return res.status(201).json({ category });
   }
