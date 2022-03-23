@@ -20,11 +20,20 @@ const router = express.Router();
 router.post(
   "/login",
   [
-    body("email").not().isEmpty().isEmail().normalizeEmail(),
-    body("password").not().isEmpty().isString(),
+    body("email")
+      .notEmpty()
+      .withMessage("email cannot be an empty field.")
+      .isEmail()
+      .withMessage("email is invalid, enter valid email."),
+    body("password")
+      .notEmpty()
+      .withMessage("password cannot be an empty field.")
+      .isString()
+      .withMessage("password must be valid string."),
   ],
   adminLogin
 );
+
 router.post(
   "/getproducts",
   [body("categoryId").isEmpty().isString()],

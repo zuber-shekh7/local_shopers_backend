@@ -1,4 +1,3 @@
-import User from "../models/UserModel.js";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
@@ -6,29 +5,29 @@ import CategoryModel from "../models/CategoryModel.js";
 import SellerModel from "../models/SellerModel.js";
 import UserModel from "../models/UserModel.js";
 import BusinessCategoryModel from "../models/BusinessCategoryModel.js";
+import Admin from "../models/AdminModel.js";
 import ProductModel from "../models/ProductModel.js";
 
 const adminLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email: email, isAdmin: true });
+  const admin = await Admin.findOne({ email: email }).select("password");
 
-  if (user && (await user.authenticate(password))) {
-    const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
-      process.env.SECRET,
-      { expiresIn: "30d" }
-    );
+  if (admin && (await admin.authenticate(password))) {
+    const token = jwt.sign({ id: admin._id }, process.env.SECRET, {
+      expiresIn: "30d",
+    });
 
     return res.json({
-      user: await User.findById(user._id).select("-password"),
+      user: await Admin.findById(user._id),
       token,
     });
   }
