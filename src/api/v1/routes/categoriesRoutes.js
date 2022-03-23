@@ -51,11 +51,11 @@ router.put(
 );
 
 router.delete(
-  "/:category_id",
+  "/:categoryId",
   [
     authenticateSeller,
     allowSellerOnly,
-    param("category_id").exists().notEmpty().isString(),
+    param("categoryId").exists().notEmpty().isString(),
   ],
   deleteCategory
 );
