@@ -8,6 +8,7 @@ import BusinessCategoryModel from "../models/BusinessCategoryModel.js";
 import Admin from "../models/AdminModel.js";
 import ProductModel from "../models/ProductModel.js";
 import { generateRandomPassword } from "../utils/passwordHelper.js";
+import { setCookie } from "../utils/coookieHelper.js";
 
 const adminLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -23,9 +24,9 @@ const adminLogin = asyncHandler(async (req, res) => {
   const admin = await Admin.findOne({ email: email }).select("password");
 
   if (admin && (await admin.authenticate(password))) {
-    const token = jwt.sign({ id: admin._id }, process.env.SECRET, {
-      expiresIn: "30d",
-    });
+    const token = await admin.generateJWTToken();
+
+    setCookie(token, res);
 
     return res.json({
       admin: await Admin.findById(admin._id),
