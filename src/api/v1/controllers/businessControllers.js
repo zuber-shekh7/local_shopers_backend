@@ -9,12 +9,13 @@ import { uploadFile } from "../config/s3.js";
 const createBusiness = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const { name, description, business_category_id } = req.body;
+  const { name, description, businessCategoryId } = req.body;
 
   const { id } = req.seller;
 
@@ -25,7 +26,7 @@ const createBusiness = asyncHandler(async (req, res) => {
     });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(business_category_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessCategoryId)) {
     res.status(400);
     return res.json({
       message: "Invalid business category id",
@@ -48,7 +49,7 @@ const createBusiness = asyncHandler(async (req, res) => {
     });
   }
 
-  const category = await BusinessCategory.findById(business_category_id);
+  const category = await BusinessCategory.findById(businessCategoryId);
 
   if (!category) {
     return res.status(400).json({
@@ -89,9 +90,9 @@ const getBusiness = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const business_id = req.params.business_id;
+  const businessId = req.params.businessId;
 
-  const business = await Business.findById(business_id).populate([
+  const business = await Business.findById(businessId).populate([
     "category",
     "categories",
   ]);
@@ -115,14 +116,14 @@ const updateBusiness = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const business_id = req.params.business_id;
+  const businessId = req.params.businessId;
 
-  const business = await Business.findById(business_id);
+  const business = await Business.findById(businessId);
 
   if (business) {
     const name = req.body.name || business.name;
     const description = req.body.description || business.description;
-    const category = req.body.category_id || business.category;
+    const category = req.body.categoryId || business.category;
 
     let image;
     if (req.file) {

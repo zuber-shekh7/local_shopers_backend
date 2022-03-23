@@ -1,36 +1,35 @@
-import User from "../models/UserModel.js";
-import asyncHandler from "express-async-handler";
-import jwt from "jsonwebtoken";
-import { validationResult } from "express-validator";
-import { OAuth2Client } from "google-auth-library";
 import mongoose from "mongoose";
+import asyncHandler from "express-async-handler";
+import { OAuth2Client } from "google-auth-library";
+import { validationResult } from "express-validator";
+
+import User from "../models/UserModel.js";
 
 const userLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating user inputs
   if (!errors.isEmpty()) {
     res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
   const { email, password } = req.body;
 
   const user = await User.findOne({ email: email });
 
+  // validating user
   if (user && (await user.authenticate(password))) {
-    const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
-      process.env.SECRET,
-      { expiresIn: "30d" }
-    );
+    const token = await user.generateJWTToken();
 
-    return res.json({
+    return res.status(200).json({
       user: await User.findById(user._id).select("-password"),
       token,
     });
   }
 
-  return res.status(400).json({
+  return res.status(401).json({
     message: "Invalid email or password",
   });
 });
@@ -38,25 +37,25 @@ const userLogin = asyncHandler(async (req, res) => {
 const userSignup = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating user inputs
   if (!errors.isEmpty()) {
     res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const { firstName, lastName, email, password } = req.body;
+  const { email, password } = req.body;
 
-  const existUser = await User.findOne({ email: email });
+  const existingUser = await User.findOne({ email: email });
 
-  if (existUser) {
-    res.status(400);
-    return res.json({
+  // checking for existing user
+  if (existingUser) {
+    return res.status(401).json({
       message: `User with email ${email} is already exists`,
     });
   }
 
   const user = await User.create({
-    firstName,
-    lastName,
     email,
     password,
   });
@@ -68,8 +67,9 @@ const userSignup = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
-  const id = req.params.user_id;
+  const id = req.params.userId;
 
+  // validating userId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
       message: "invalid user id",
@@ -88,15 +88,9 @@ const getUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
+  const id = req.params.userId;
 
-  if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
-  }
-
-  const id = req.params.user_id;
-
+  // validating userId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
       message: "invalid user id",
@@ -106,6 +100,7 @@ const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(id).select("-password");
 
   if (user) {
+    // updating user fields
     user.firstName = req.body.firstName || user.firstName;
     user.lastName = req.body.lastName || user.lastName;
     user.email = req.body.email || user.email;
@@ -124,14 +119,16 @@ const updateUser = asyncHandler(async (req, res) => {
 const googleAuthentication = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating inputs
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const token = req.body.token;
   const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID);
 
+  // validating token and generating ticket
   const ticket = await client.verifyIdToken({
     idToken: token,
     audience: process.env.GOOGLE_OAUTH_CLIENT_ID,
@@ -148,16 +145,13 @@ const googleAuthentication = asyncHandler(async (req, res) => {
     const existuser = await User.findOne({ email: email }).select("-password");
 
     if (existuser) {
-      const token = jwt.sign(
-        { id: existuser._id, isAdmin: existuser.isAdmin },
-        process.env.SECRET,
-        { expiresIn: "30d" }
-      );
-
+      const token = await existuser.generateJWTToken();
       return res.json({ token, user: existuser });
     }
 
+    // creating password for google auth user
     const password = email + process.env.SECRET;
+
     const user = await User.create({
       firstName,
       lastName,
@@ -165,20 +159,17 @@ const googleAuthentication = asyncHandler(async (req, res) => {
       password,
     });
 
-    const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
-      process.env.SECRET,
-      { expiresIn: "30d" }
-    );
+    const token = await user.generateJWTToken();
 
     return res.json({
-      token,
       user: await User.findById(user._id).select("-password"),
+      token,
     });
   }
 
   return res.status(400).json({
-    message: "Your email address in not verified, please verify you email.",
+    message:
+      "Your email address in not verified, please verify you email with google.",
   });
 });
 

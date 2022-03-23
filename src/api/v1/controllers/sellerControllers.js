@@ -8,20 +8,19 @@ import mongoose from "mongoose";
 const sellerLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating input
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
   const { email, password } = req.body;
-  const seller = await Seller.findOne({ email: email, isSeller: true });
 
+  const seller = await Seller.findOne({ email: email });
+
+  // authenticating seller
   if (seller && (await seller.authenticate(password))) {
-    const token = jwt.sign(
-      { id: seller._id, isSeller: true },
-      process.env.SECRET,
-      { expiresIn: "30d" }
-    );
+    const token = await seller.generateJWTToken();
 
     return res.json({
       seller: await Seller.findById(seller._id).select("-password"),
@@ -37,15 +36,17 @@ const sellerLogin = asyncHandler(async (req, res) => {
 const sellerSignup = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating input
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const { firstName, lastName, email, password } = req.body;
+  const { email, password } = req.body;
 
   const existSeller = await Seller.findOne({ email: email });
 
+  // checking for existing seller
   if (existSeller) {
     res.status(400);
     return res.json({
@@ -53,16 +54,15 @@ const sellerSignup = asyncHandler(async (req, res) => {
     });
   }
 
-  await Seller.create({
-    firstName,
-    lastName,
+  // creating new seller
+  const seller = await Seller.create({
     email,
     password,
   });
 
-  res.status(201);
-  return res.json({
-    message: "Account Created Successfully",
+  return res.status(201).json({
+    seller: await Seller.findById(seller._id).select("-password"),
+    token: await seller.generateJWTToken(),
   });
 });
 
@@ -70,11 +70,11 @@ const getSeller = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ errorr: msg });
   }
 
-  const id = req.params.seller_id;
+  const id = req.params.sellerId;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(400);
@@ -168,12 +168,13 @@ const googleAuthentication = asyncHandler(async (req, res) => {
 const updateSeller = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // validating input
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.json({ error: msg });
   }
 
-  const id = req.params.seller_id;
+  const id = req.params.sellerId;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({

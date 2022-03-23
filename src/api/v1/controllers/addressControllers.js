@@ -41,15 +41,15 @@ const createAddress = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const user_id = req.body.user_id;
+  const userId = req.body.userId;
 
-  if (!mongoose.Types.ObjectId.isValid(user_id)) {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
       message: "Invalid user id",
     });
   }
 
-  const user = await User.findById(user_id);
+  const user = await User.findById(userId);
 
   if (user) {
     const {
@@ -93,15 +93,15 @@ const getAddress = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const address_id = req.params.address_id;
+  const addressId = req.params.addressId;
 
-  if (!mongoose.Types.ObjectId.isValid(address_id)) {
+  if (!mongoose.Types.ObjectId.isValid(addressId)) {
     return res.status(400).json({
       message: "Invalid address id",
     });
   }
 
-  const address = await Address.findById(address_id);
+  const address = await Address.findById(addressId);
 
   if (address) {
     return res.status(200).json({ address });
@@ -120,15 +120,15 @@ const editAddress = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const address_id = req.params.address_id;
+  const addressId = req.params.addressId;
 
-  if (!mongoose.Types.ObjectId.isValid(address_id)) {
+  if (!mongoose.Types.ObjectId.isValid(addressId)) {
     return res.status(400).json({
       message: "Invalid address id",
     });
   }
 
-  const address = await Address.findById(address_id);
+  const address = await Address.findById(addressId);
 
   if (address) {
     const fullName = req.body.fullName || address.fullName;
@@ -167,15 +167,15 @@ const deleteAddress = asyncHandler(async (req, res) => {
     return res.json({ errors: errors.array() });
   }
 
-  const address_id = req.params.address_id;
+  const addressId = req.params.addressId;
 
-  if (!mongoose.Types.ObjectId.isValid(address_id)) {
+  if (!mongoose.Types.ObjectId.isValid(addressId)) {
     return res.status(400).json({
       message: "Invalid address id",
     });
   }
 
-  const address = await Address.findById(address_id);
+  const address = await Address.findById(addressId);
 
   if (address) {
     await address.delete();

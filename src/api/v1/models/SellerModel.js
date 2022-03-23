@@ -1,17 +1,16 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-const UserSchema = mongoose.Schema(
+const SellerSchema = mongoose.Schema(
   {
     firstName: {
       type: String,
       trim: true,
-      required: true,
     },
     lastName: {
       type: String,
       trim: true,
-      required: true,
     },
     email: {
       type: String,
@@ -25,39 +24,35 @@ const UserSchema = mongoose.Schema(
       unique: true,
       sparse: true,
     },
+    business: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Business",
+    },
     password: {
       type: String,
       required: true,
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false,
     },
     isActive: {
       type: Boolean,
       default: true,
     },
-    wishList: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "WishList",
-    },
-    addresses: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Address",
-      },
-    ],
   },
   {
     timestamps: true,
   }
 );
 
-UserSchema.methods.authenticate = async function (password) {
+SellerSchema.methods.authenticate = async function (password) {
   return await bcrypt.compareSync(password, this.password);
 };
 
-UserSchema.pre("save", async function (next) {
+SellerSchema.methods.generateJWTToken = async function () {
+  return jwt.sign({ id: this._id }, process.env.SECRET, {
+    expiresIn: "30d",
+  });
+};
+
+SellerSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     const hashPassword = await bcrypt.hashSync(this.password, 10);
     this.password = hashPassword;
@@ -65,4 +60,4 @@ UserSchema.pre("save", async function (next) {
   return next();
 });
 
-export default mongoose.model("User", UserSchema);
+export default mongoose.model("Seller", SellerSchema);

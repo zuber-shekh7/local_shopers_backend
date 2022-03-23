@@ -16,24 +16,24 @@ const router = express.Router();
 const upload = multer();
 
 router.post(
-  "/new",
+  "",
   [
     authenticateSeller,
     allowSellerOnly,
     upload.single("image"),
     body("name").notEmpty().isString(),
     body("description").notEmpty().isString(),
-    body("business_category_id").exists().notEmpty().isString(),
+    body("businessCategoryId").exists().notEmpty().isString(),
   ],
   createBusiness
 );
 
 router.put(
-  "/:business_id",
+  "/:businessId",
   [authenticateSeller, allowSellerOnly, upload.single("image")],
   updateBusiness
 );
 
-router.get("/:business_id", getBusiness);
+router.get("/:businessId", getBusiness);
 
 export default router;

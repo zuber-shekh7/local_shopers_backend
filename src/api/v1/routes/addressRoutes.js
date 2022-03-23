@@ -22,7 +22,7 @@ router.post(
   "",
   [
     authenticate,
-    body("user_id").exists().notEmpty().isString(),
+    body("userId").exists().notEmpty().isString(),
     body("fullName").exists().notEmpty().isString(),
     body("mobileNumber").exists().notEmpty().isString(),
     body("pincode").exists().notEmpty().isString(),
@@ -33,10 +33,10 @@ router.post(
   createAddress
 );
 
-router.get("/:address_id", [authenticate], getAddress);
+router.get("/:addressId", [authenticate], getAddress);
 
-router.put("/:address_id", [authenticate], editAddress);
+router.put("/:addressId", [authenticate], editAddress);
 
-router.delete("/:address_id", [authenticate], deleteAddress);
+router.delete("/:addressId", [authenticate], deleteAddress);
 
 export default router;

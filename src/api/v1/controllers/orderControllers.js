@@ -6,15 +6,15 @@ import Business from "../models/BusinessModel.js";
 import Order from "../models/OrderModel.js";
 
 const getUserOrders = asyncHandler(async (req, res) => {
-  const { user_id } = req.query;
+  const { userId } = req.query;
 
-  if (!mongoose.Types.ObjectId.isValid(user_id)) {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
       message: "Invalid user id",
     });
   }
 
-  const user = await User.findById(user_id);
+  const user = await User.findById(userId);
 
   if (!user) {
     return res.status(400).json({
@@ -22,7 +22,9 @@ const getUserOrders = asyncHandler(async (req, res) => {
     });
   }
 
-  const orders = await Order.find({ user }).populate("orderItems", "user");
+  const orders = await Order.find({ user })
+    .populate({ path: "orderItems", populate: { path: "product" } })
+    .sort({ createdAt: -1 });
 
   return res.json({
     orders,
@@ -30,15 +32,15 @@ const getUserOrders = asyncHandler(async (req, res) => {
 });
 
 const getSellerOrders = asyncHandler(async (req, res) => {
-  const { business_id } = req.query;
+  const { businessId } = req.query;
 
-  if (!mongoose.Types.ObjectId.isValid(business_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessId)) {
     return res.status(400).json({
       message: "Invalid business id",
     });
   }
 
-  const business = await Business.findById(business_id);
+  const business = await Business.findById(businessId);
 
   if (!business) {
     return res.status(400).json({

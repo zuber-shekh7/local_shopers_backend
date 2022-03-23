@@ -1,0 +1,608 @@
+openapi: 3.0.0
+info:
+  title: Local Shoppers Backend
+  description: Documentation for the Local Shoppers Backend Service
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:4000/api/v1/
+    description: local server of our backend service.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+paths:
+  /hello:
+    get:
+      tags:
+        - Core
+      summary: "Greets the user"
+      responses:
+        "200":
+          description: "return an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: "User login"
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+
+        description: email address
+        in: body
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                        example: "zuber"
+                      lastName:
+                        type: string
+                        example: "shekh"
+                      email:
+                        type: string
+                        example: "zuber@example.com"
+                  token:
+                    type: string
+                    example: "textThatNoOneCanUnderstandExceptComputer"
+
+  /users/signup:
+    post:
+      tags:
+        - Users
+      summary: "User signup"
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+
+        description: email address
+        in: body
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                        example: "zuber"
+                      lastName:
+                        type: string
+                        example: "shekh"
+                      email:
+                        type: string
+                        example: "zuber@example.com"
+                  token:
+                    type: string
+                    example: "textThatNoOneCanUnderstandExceptComputer"
+
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: "Get unique user"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          required: true
+          description: user id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                    example: "zuber"
+                  lastName:
+                    type: string
+                    example: "shekh"
+                  email:
+                    type: string
+                    example: "zuber@example.com"
+
+    put:
+      tags:
+        - Users
+      summary: "Update user"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          required: true
+          description: user id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                    example: "zuber"
+                  lastName:
+                    type: string
+                    example: "shekh"
+                  email:
+                    type: string
+                    example: "zuber@example.com"
+
+  /sellers/login:
+    post:
+      tags:
+        - Sellers
+      summary: "Seller login"
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+
+        description: email address
+        in: body
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  seller:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                        example: "zuber"
+                      lastName:
+                        type: string
+                        example: "shekh"
+                      email:
+                        type: string
+                        example: "zuber@example.com"
+                  token:
+                    type: string
+                    example: "textThatNoOneCanUnderstandExceptComputer"
+
+  /sellers/signup:
+    post:
+      tags:
+        - Sellers
+      summary: "Seller signup"
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+
+        description: email address
+        in: body
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  seller:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                        example: "zuber"
+                      lastName:
+                        type: string
+                        example: "shekh"
+                      email:
+                        type: string
+                        example: "zuber@example.com"
+                  token:
+                    type: string
+                    example: "textThatNoOneCanUnderstandExceptComputer"
+
+  /sellers/{sellerId}:
+    get:
+      tags:
+        - Sellers
+      summary: "Get unique seller"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: sellerId
+          required: true
+          description: seller id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                    example: "zuber"
+                  lastName:
+                    type: string
+                    example: "shekh"
+                  email:
+                    type: string
+                    example: "zuber@example.com"
+
+    put:
+      tags:
+        - Sellers
+      summary: "Update seller"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: sellerId
+          required: true
+          description: seller id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                    example: "zuber"
+                  lastName:
+                    type: string
+                    example: "shekh"
+                  email:
+                    type: string
+                    example: "zuber@example.com"
+
+  /business:
+    post:
+      tags:
+        - Business
+      summary: "Create business"
+      security:
+        - bearerAuth: []
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                businessCategoryId:
+                  type: string
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  business:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "iVenus"
+                      description:
+                        type: string
+                        example: "Authorised Reseller of Apple"
+
+  /business/{businessId}:
+    get:
+      tags:
+        - Business
+      summary: "Get unique business"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: businessId
+          required: true
+          description: business id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  business:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "iVenus"
+                      description:
+                        type: string
+                        example: "Authorised Reseller of Apple"
+
+    put:
+      tags:
+        - Business
+      summary: "Update business"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: businessId
+          required: true
+          description: business id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  business:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "iVenus"
+                      description:
+                        type: string
+                        example: "Authorised Reseller of Apple"
+
+  /addresses:
+    post:
+      tags:
+        - Address
+      summary: "Create address"
+      security:
+        - bearerAuth: []
+      consumes: application/json
+      produces: application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                fullName:
+                  type: string
+                mobileNumber:
+                  type: string
+                pincode:
+                  type: string
+                flatNo:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                street:
+                  type: string
+                landmark:
+                  type: string
+
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      fullName:
+                        type: string
+                      mobileNumber:
+                        type: string
+                      pincode:
+                        type: string
+                      flatNo:
+                        type: string
+                      city:
+                        type: string
+                      state:
+                        type: string
+                      street:
+                        type: string
+                      landmark:
+                        type: string
+
+  /addresses/{addressId}:
+    get:
+      tags:
+        - Address
+      summary: "Get unique address"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: addressId
+          required: true
+          description: address id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      fullName:
+                        type: string
+                      mobileNumber:
+                        type: string
+                      pincode:
+                        type: string
+                      flatNo:
+                        type: string
+                      city:
+                        type: string
+                      state:
+                        type: string
+                      street:
+                        type: string
+                      landmark:
+                        type: string
+
+    put:
+      tags:
+        - Address
+      summary: "Edit an address"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: addressId
+          required: true
+          description: address id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      fullName:
+                        type: string
+                      mobileNumber:
+                        type: string
+                      pincode:
+                        type: string
+                      flatNo:
+                        type: string
+                      city:
+                        type: string
+                      state:
+                        type: string
+                      street:
+                        type: string
+                      landmark:
+                        type: string
+
+    delete:
+      tags:
+        - Address
+      summary: "Delete an address"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: addressId
+          required: true
+          description: address id
+          in: path
+      responses:
+        "200":
+          description: "returns an object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Address deleted successfully
