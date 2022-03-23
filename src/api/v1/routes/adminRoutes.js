@@ -9,10 +9,12 @@ import {
   getStatistics,
   getCustomers,
   getSellers,
+  adminLogout,
 } from "../controllers/adminControllers.js";
 import {
   allowAdminOnly,
   authenticate,
+  authenticateAdmin,
 } from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
@@ -33,6 +35,8 @@ router.post(
   ],
   adminLogin
 );
+
+router.get("/logout", [authenticateAdmin], adminLogout);
 
 router.post(
   "/getproducts",

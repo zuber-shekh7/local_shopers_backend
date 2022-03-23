@@ -37,6 +37,13 @@ const adminLogin = asyncHandler(async (req, res) => {
   });
 });
 
+const adminLogout = asyncHandler(async (req, res) => {
+  res.clearCookie("token");
+  return res.status(200).json({
+    message: "Admin logged out successfully",
+  });
+});
+
 const getCategoryAdmin = asyncHandler(async (req, res) => {
   const categoryDetail = await CategoryModel.find();
   return res.status(200).json({ categoryDetail });
@@ -106,6 +113,7 @@ const getStatistics = asyncHandler(async (req, res) => {
 
 export {
   adminLogin,
+  adminLogout,
   getCategoryAdmin,
   getProducts,
   getAdminList,
