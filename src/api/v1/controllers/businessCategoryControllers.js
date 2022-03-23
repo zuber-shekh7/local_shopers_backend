@@ -15,19 +15,22 @@ const getBusinessCategories = asyncHandler(async (req, res) => {
 const createBusinessCategory = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const { name, description } = req.body;
 
-  const existCategory = await BusinessCategory.findOne({ name: name });
+  const existCategory = await BusinessCategory.findOne({
+    name: name.toLowerCase(),
+  });
 
   if (existCategory) {
     res.status(400);
     return res.json({
-      message: "Business Category is already exists",
+      message: "Business category is already exists",
     });
   }
 
