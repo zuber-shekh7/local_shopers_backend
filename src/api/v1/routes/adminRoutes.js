@@ -11,6 +11,7 @@ import {
   getSellers,
   adminLogout,
   addAdmin,
+  getAdmin,
 } from "../controllers/adminControllers.js";
 import {
   allowAdminOnly,
@@ -38,6 +39,8 @@ router.post(
 );
 
 router.get("/logout", [authenticateAdmin], adminLogout);
+
+router.get("/:adminId", [authenticateAdmin], getAdmin);
 
 router.post(
   "/add",

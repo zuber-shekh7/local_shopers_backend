@@ -1,5 +1,5 @@
+import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
-import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import CategoryModel from "../models/CategoryModel.js";
 import SellerModel from "../models/SellerModel.js";
@@ -75,6 +75,27 @@ const addAdmin = asyncHandler(async (req, res) => {
   return res.status(201).json({ admin });
 });
 
+const getAdmin = asyncHandler(async (req, res) => {
+  const id = req.params.adminId;
+
+  // validating userId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "invalid admin id",
+    });
+  }
+
+  const admin = await Admin.findById(id);
+
+  if (admin) {
+    return res.json({
+      admin,
+    });
+  }
+
+  return res.status(400).json({ message: "Invalid admin id" });
+});
+
 const getCategoryAdmin = asyncHandler(async (req, res) => {
   const categoryDetail = await CategoryModel.find();
   return res.status(200).json({ categoryDetail });
@@ -146,6 +167,7 @@ export {
   adminLogin,
   adminLogout,
   addAdmin,
+  getAdmin,
   getCategoryAdmin,
   getProducts,
   getAdminList,
