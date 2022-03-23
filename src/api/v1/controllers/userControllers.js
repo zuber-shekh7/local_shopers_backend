@@ -180,4 +180,18 @@ const googleAuthentication = asyncHandler(async (req, res) => {
   });
 });
 
-export { userLogin, userSignup, getUser, updateUser, googleAuthentication };
+const userLogout = asyncHandler(async (req, res) => {
+  res.clearCookie("token");
+  return res.status(200).json({
+    message: "User logged out successfully",
+  });
+});
+
+export {
+  userLogin,
+  userSignup,
+  getUser,
+  updateUser,
+  googleAuthentication,
+  userLogout,
+};

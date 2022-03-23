@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import colors from "colors";
+import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -30,6 +31,7 @@ if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 

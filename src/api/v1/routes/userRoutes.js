@@ -7,6 +7,7 @@ import {
   googleAuthentication,
   userLogin,
   userSignup,
+  userLogout,
 } from "../controllers/userControllers.js";
 import { authenticate } from "../middlewares/authMiddlewares.js";
 
@@ -45,6 +46,8 @@ router.post(
   ],
   userSignup
 );
+
+router.get("/logout", [authenticate], userLogout);
 
 router.get("/:userId", [authenticate], getUser);
 
