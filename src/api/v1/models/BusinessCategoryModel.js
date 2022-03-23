@@ -16,6 +16,12 @@ const BusinessCategorySchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    businesses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Business",
+      },
+    ],
   },
   {
     timestamps: true,
