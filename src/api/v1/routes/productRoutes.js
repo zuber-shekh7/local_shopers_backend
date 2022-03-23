@@ -37,22 +37,22 @@ router.get(
 );
 
 router.put(
-  "/:product_id",
+  "/:productId",
   [
     authenticateSeller,
     allowSellerOnly,
     upload.single("image"),
-    param("product_id").exists().notEmpty().isString(),
+    param("productId").exists().notEmpty().isString(),
   ],
   editProduct
 );
 
 router.delete(
-  "/:product_id",
+  "/:productId",
   [
     authenticateSeller,
     allowSellerOnly,
-    param("product_id").exists().notEmpty().isString(),
+    param("productId").exists().notEmpty().isString(),
   ],
   deleteProduct
 );
