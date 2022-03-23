@@ -18,7 +18,7 @@ const userLogin = asyncHandler(async (req, res) => {
 
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ email: email }).select("password");
 
   // validating user
   if (user && (await user.authenticate(password))) {
