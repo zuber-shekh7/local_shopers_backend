@@ -4,14 +4,6 @@ import jwt from "jsonwebtoken";
 
 const SellerSchema = mongoose.Schema(
   {
-    firstName: {
-      type: String,
-      trim: true,
-    },
-    lastName: {
-      type: String,
-      trim: true,
-    },
     email: {
       type: String,
       trim: true,
@@ -31,6 +23,7 @@ const SellerSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     isActive: {
       type: Boolean,

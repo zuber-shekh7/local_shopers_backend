@@ -1,9 +1,10 @@
+import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import Seller from "../models/SellerModel.js";
-import mongoose from "mongoose";
+import { setCookie } from "../utils/coookieHelper.js";
 
 const sellerLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -16,14 +17,16 @@ const sellerLogin = asyncHandler(async (req, res) => {
 
   const { email, password } = req.body;
 
-  const seller = await Seller.findOne({ email: email });
+  const seller = await Seller.findOne({ email: email }).select("password");
 
   // authenticating seller
   if (seller && (await seller.authenticate(password))) {
     const token = await seller.generateJWTToken();
 
+    setCookie(token, res);
+
     return res.json({
-      seller: await Seller.findById(seller._id).select("-password"),
+      seller: await Seller.findById(seller._id),
       token,
     });
   }
@@ -60,9 +63,13 @@ const sellerSignup = asyncHandler(async (req, res) => {
     password,
   });
 
+  const token = await seller.generateJWTToken();
+
+  setCookie(token, res);
+
   return res.status(201).json({
-    seller: await Seller.findById(seller._id).select("-password"),
-    token: await seller.generateJWTToken(),
+    seller: await Seller.findById(seller._id),
+    token,
   });
 });
 
