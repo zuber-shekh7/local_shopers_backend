@@ -4,14 +4,6 @@ import jwt from "jsonwebtoken";
 
 const UserSchema = mongoose.Schema(
   {
-    firstName: {
-      type: String,
-      trim: true,
-    },
-    lastName: {
-      type: String,
-      trim: true,
-    },
     email: {
       type: String,
       trim: true,
@@ -24,13 +16,26 @@ const UserSchema = mongoose.Schema(
       unique: true,
       sparse: true,
     },
+    profile: {
+      firstName: {
+        type: String,
+        trim: true,
+      },
+      lastName: {
+        type: String,
+        trim: true,
+      },
+      gender: {
+        type: String,
+        trim: true,
+      },
+      dob: {
+        type: Date,
+      },
+    },
     password: {
       type: String,
       required: true,
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false,
     },
     isActive: {
       type: Boolean,
