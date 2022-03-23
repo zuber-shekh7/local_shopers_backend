@@ -75,6 +75,8 @@ const createBusiness = asyncHandler(async (req, res) => {
   });
 
   seller.business = business._id;
+  business.seller = seller._id;
+
   await seller.save();
 
   return res.status(201).json({
