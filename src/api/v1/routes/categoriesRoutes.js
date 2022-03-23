@@ -45,7 +45,7 @@ router.get(
 );
 
 router.put(
-  "/:category_id",
+  "/:categoryId",
   [authenticateSeller, allowSellerOnly, upload.single("image")],
   updateCategory
 );
