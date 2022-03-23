@@ -11,6 +11,12 @@ const CategorySchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    businesses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Business",
+      },
+    ],
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
