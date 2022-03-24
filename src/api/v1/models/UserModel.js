@@ -57,7 +57,7 @@ const UserSchema = mongoose.Schema(
       type: String,
     },
     forgotPasswordTokenExpiry: {
-      type: String,
+      type: Date,
     },
   },
 
@@ -80,7 +80,9 @@ UserSchema.methods.generateForgotPasswordToken = function () {
   const token = crypto.randomBytes(30).toString("hex");
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
   this.forgotPasswordToken = hashedToken;
-  this.forgotPasswordTokenExpiry = Date.now() * 1 * 24 * 60 * 60 * 1000;
+  this.forgotPasswordTokenExpiry = new Date(
+    Date.now() + 1 * 24 * 60 * 60 * 1000
+  );
   return token;
 };
 
