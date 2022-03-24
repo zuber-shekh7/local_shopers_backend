@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
+import crypto from "crypto";
 import { OAuth2Client } from "google-auth-library";
 import { validationResult } from "express-validator";
 
@@ -282,6 +283,50 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
+const resetPassword = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  // input validation
+  if (!errors.isEmpty()) {
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
+  }
+
+  const { password } = req.body;
+
+  const { token } = req.params;
+
+  if (!token) {
+    return res.status(400).json({
+      message: `Invalid or expired token.`,
+    });
+  }
+
+  const encryptToken = crypto.createHash("sha256").update(token).digest("hex");
+  crypto.createHash("sha256").update(token).digest("hex");
+
+  const user = await User.findOne({
+    forgotPasswordToken: encryptToken,
+    forgotPasswordTokenExpiry: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({
+      message: `Invalid or expired token.`,
+    });
+  }
+
+  user.password = password;
+  user.forgotPasswordToken = undefined;
+  user.forgotPasswordTokenExpiry = undefined;
+
+  await user.save();
+
+  return res.json({
+    message: "Password reset successfully.",
+  });
+});
+
 export {
   userLogin,
   userSignup,
@@ -291,4 +336,5 @@ export {
   userLogout,
   changePassword,
   forgotPassword,
+  resetPassword,
 };

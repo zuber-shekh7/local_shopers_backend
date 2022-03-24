@@ -10,6 +10,7 @@ import {
   userLogout,
   changePassword,
   forgotPassword,
+  resetPassword,
 } from "../controllers/userControllers.js";
 import { authenticate } from "../middlewares/authMiddlewares.js";
 
@@ -68,6 +69,16 @@ router.post(
   "/forgot-password",
   [body("email").notEmpty().withMessage("email cannot be an empty field.")],
   forgotPassword
+);
+
+router.post(
+  "/reset-password/:token",
+  [
+    body("password")
+      .notEmpty()
+      .withMessage("password cannot be an empty field."),
+  ],
+  resetPassword
 );
 
 router.get("/:userId", [authenticate], getUser);
