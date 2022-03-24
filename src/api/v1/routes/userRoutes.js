@@ -8,6 +8,7 @@ import {
   userLogin,
   userSignup,
   userLogout,
+  changePassword,
 } from "../controllers/userControllers.js";
 import { authenticate } from "../middlewares/authMiddlewares.js";
 
@@ -48,6 +49,20 @@ router.post(
 );
 
 router.get("/logout", [authenticate], userLogout);
+
+router.post(
+  "/change-password",
+  [
+    authenticate,
+    body("oldPassword")
+      .notEmpty()
+      .withMessage("oldPassword cannot be an empty field."),
+    body("newPassword")
+      .notEmpty()
+      .withMessage("newPassword cannot be an empty field."),
+  ],
+  changePassword
+);
 
 router.get("/:userId", [authenticate], getUser);
 

@@ -199,6 +199,41 @@ const userLogout = asyncHandler(async (req, res) => {
   });
 });
 
+const changePassword = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  // input validation
+  if (!errors.isEmpty()) {
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
+  }
+
+  const { oldPassword, newPassword } = req.body;
+
+  if (oldPassword === newPassword) {
+    return res.status(400).json({
+      message:
+        "New password and old password are same. Please enter different new password.",
+    });
+  }
+
+  const user = await User.findById(req.user.id).select("password");
+
+  if (user && (await user.authenticate(oldPassword))) {
+    user.password = newPassword;
+    await user.save();
+
+    const token = await user.generateJWTToken();
+    setCookie(token, res);
+
+    return res.json({ message: "Password changed successfully." });
+  }
+
+  return res.status(400).json({
+    message: "Incorrect old password. Please enter correct password",
+  });
+});
+
 export {
   userLogin,
   userSignup,
@@ -206,4 +241,5 @@ export {
   updateUser,
   googleAuthentication,
   userLogout,
+  changePassword,
 };
