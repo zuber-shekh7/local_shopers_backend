@@ -132,7 +132,7 @@ const updateUser = asyncHandler(async (req, res) => {
 const googleAuthentication = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
-  // validating inputs
+  // input validation
   if (!errors.isEmpty()) {
     const { msg } = errors.array()[0];
     return res.status(400).json({ error: msg });
@@ -157,8 +157,10 @@ const googleAuthentication = asyncHandler(async (req, res) => {
   if (email_verified) {
     const existuser = await User.findOne({ email: email }).select("-password");
 
+    // checking for existing user
     if (existuser) {
       const token = await existuser.generateJWTToken();
+      setCookie(token, res);
       return res.json({ token, user: existuser });
     }
 
@@ -166,16 +168,20 @@ const googleAuthentication = asyncHandler(async (req, res) => {
     const password = email + process.env.SECRET;
 
     const user = await User.create({
-      firstName,
-      lastName,
       email,
       password,
+      profile: {
+        firstName,
+        lastName,
+      },
     });
 
     const token = await user.generateJWTToken();
 
+    setCookie(token, res);
+
     return res.json({
-      user: await User.findById(user._id).select("-password"),
+      user: await User.findById(user._id),
       token,
     });
   }
