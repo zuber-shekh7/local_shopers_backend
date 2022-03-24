@@ -5,6 +5,7 @@ import { validationResult } from "express-validator";
 
 import User from "../models/UserModel.js";
 import { setCookie } from "../utils/coookieHelper.js";
+import { sentEmail } from "../utils/mailHelper.js";
 
 const userLogin = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -234,6 +235,53 @@ const changePassword = asyncHandler(async (req, res) => {
   });
 });
 
+const forgotPassword = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  // input validation
+  if (!errors.isEmpty()) {
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
+  }
+
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(400).json({
+      message: `${email} is not registered email.`,
+    });
+  }
+
+  const token = user.generateForgotPasswordToken();
+
+  await user.save();
+
+  const forgotPasswordLink = `${process.env.FORGOT_PASSWORD_LINK}/${token}`;
+
+  const text = `Reset Password Link\n\nCopy the following link, paste in your browser and hit enter.\n\nLink: ${forgotPasswordLink}`;
+
+  const subject = "Local Shoppers Reset Password Link";
+
+  try {
+    await sentEmail(user.email, subject, text);
+    return res.json({
+      message: "Email sent successfully. Please check your inbox.",
+    });
+  } catch (err) {
+    console.error(err.message);
+
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordTokenExpiry = undefined;
+    await user.save();
+
+    return res.status(500).json({
+      message: "Failed to sent email. Please try again later.",
+    });
+  }
+});
+
 export {
   userLogin,
   userSignup,
@@ -242,4 +290,5 @@ export {
   googleAuthentication,
   userLogout,
   changePassword,
+  forgotPassword,
 };

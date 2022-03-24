@@ -9,6 +9,7 @@ import {
   userSignup,
   userLogout,
   changePassword,
+  forgotPassword,
 } from "../controllers/userControllers.js";
 import { authenticate } from "../middlewares/authMiddlewares.js";
 
@@ -54,14 +55,19 @@ router.post(
   "/change-password",
   [
     authenticate,
-    body("oldPassword")
+    body("email")
       .notEmpty()
-      .withMessage("oldPassword cannot be an empty field."),
-    body("newPassword")
-      .notEmpty()
-      .withMessage("newPassword cannot be an empty field."),
+      .withMessage("email cannot be an empty field.")
+      .isEmail()
+      .withMessage("email is invalid, enter valid email."),
   ],
   changePassword
+);
+
+router.post(
+  "/forgot-password",
+  [body("email").notEmpty().withMessage("email cannot be an empty field.")],
+  forgotPassword
 );
 
 router.get("/:userId", [authenticate], getUser);
