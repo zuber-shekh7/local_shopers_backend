@@ -74,6 +74,7 @@ const createAddress = asyncHandler(async (req, res) => {
       state,
       street,
       landmark,
+      user,
     });
 
     user.addresses.push(address);
@@ -183,7 +184,12 @@ const deleteAddress = asyncHandler(async (req, res) => {
   const address = await Address.findById(addressId);
 
   if (address) {
+    const user = await User.findById(address.user._id);
+
+    await user.addresses.pull(address);
     await address.delete();
+    await user.save();
+
     return res.status(200).json({ message: "Address deleted successfully" });
   }
 
