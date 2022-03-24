@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.get(
   "",
-  [authenticate, query("user_id").exists().notEmpty().isString()],
+  [authenticate, query("userId").exists().notEmpty().isString()],
   getAddresses
 );
 

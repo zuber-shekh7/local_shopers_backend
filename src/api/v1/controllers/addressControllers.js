@@ -7,20 +7,21 @@ import User from "../models/UserModel.js";
 const getAddresses = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
-  const user_id = req.query.user_id;
+  const userId = req.query.userId;
 
-  if (!mongoose.Types.ObjectId.isValid(user_id)) {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
       message: "Invalid user id",
     });
   }
 
-  const user = await User.findById(user_id).populate("addresses");
+  const user = await User.findById(userId).populate("addresses");
 
   if (user) {
     const addresses = user.addresses;
@@ -36,9 +37,10 @@ const getAddresses = asyncHandler(async (req, res) => {
 const createAddress = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const userId = req.body.userId;
@@ -88,9 +90,10 @@ const createAddress = asyncHandler(async (req, res) => {
 const getAddress = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const addressId = req.params.addressId;
@@ -115,9 +118,10 @@ const getAddress = asyncHandler(async (req, res) => {
 const editAddress = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const addressId = req.params.addressId;
@@ -162,9 +166,10 @@ const editAddress = asyncHandler(async (req, res) => {
 const deleteAddress = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
+  // input validation
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const addressId = req.params.addressId;
@@ -186,4 +191,5 @@ const deleteAddress = asyncHandler(async (req, res) => {
     message: "Invalid address id",
   });
 });
+
 export { getAddresses, createAddress, getAddress, editAddress, deleteAddress };
