@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const UserSchema = mongoose.Schema(
   {
@@ -52,7 +53,14 @@ const UserSchema = mongoose.Schema(
         ref: "Address",
       },
     ],
+    forgotPasswordToken: {
+      type: String,
+    },
+    forgotPasswordTokenExpiry: {
+      type: String,
+    },
   },
+
   {
     timestamps: true,
   }
@@ -66,6 +74,14 @@ UserSchema.methods.generateJWTToken = async function () {
   return jwt.sign({ id: this._id }, process.env.SECRET, {
     expiresIn: "30d",
   });
+};
+
+UserSchema.methods.generateForgotPasswordToken = function () {
+  const token = crypto.randomBytes(30).toString("hex");
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+  this.forgotPasswordToken = hashedToken;
+  this.forgotPasswordTokenExpiry = Date.now() * 1 * 24 * 60 * 60 * 1000;
+  return token;
 };
 
 UserSchema.pre("save", async function (next) {
