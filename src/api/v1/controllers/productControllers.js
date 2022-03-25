@@ -14,6 +14,11 @@ const createProduct = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: msg });
   }
 
+  // file validation
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).json({ error: "Please upload photos" });
+  }
+
   const categoryId = req.body.categoryId;
 
   if (!mongoose.Types.ObjectId.isValid(categoryId)) {
@@ -25,25 +30,20 @@ const createProduct = asyncHandler(async (req, res) => {
   const category = await Category.findById(categoryId);
 
   if (category) {
-    const { name, description, price, quantity, unit } = req.body;
-
-    const file = req.file;
-    if (!file) {
-      return res.status(400).json({
-        message: "Image field required",
-      });
-    }
+    const { name, description, price, stock } = req.body;
 
     // uploading image to s3
-    const { Location: image } = await uploadFile(file);
+    const { Key, Location } = await uploadFile(req.files.photos, "photos");
 
     const product = await Product.create({
       name,
       description,
       price,
-      quantity,
-      image,
-      unit,
+      stock,
+      photos: {
+        key: Key,
+        url: Location,
+      },
     });
 
     category.products.push(product);

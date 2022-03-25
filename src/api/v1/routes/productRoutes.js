@@ -21,12 +21,26 @@ router.post(
   [
     authenticateSeller,
     allowSellerOnly,
-    upload.single("image"),
-    body("categoryId").exists().notEmpty().isString(),
-    body("name").exists().notEmpty().isString(),
-    body("description").exists().notEmpty().isString(),
-    body("price").exists().notEmpty().isDecimal(),
-    body("quantity").exists().notEmpty().isDecimal(),
+    body("categoryId")
+      .notEmpty()
+      .withMessage("categoryId cannot be an empty field")
+      .isString(),
+    body("name")
+      .notEmpty()
+      .withMessage("name cannot be an empty field")
+      .isString(),
+    body("description")
+      .notEmpty()
+      .withMessage("description cannot be an empty field")
+      .isString(),
+    body("price")
+      .notEmpty()
+      .withMessage("price cannot be an empty field")
+      .isDecimal(),
+    body("stock")
+      .notEmpty()
+      .withMessage("stock cannot be an empty field")
+      .isDecimal(),
   ],
   createProduct
 );
