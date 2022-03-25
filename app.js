@@ -53,6 +53,7 @@ app.use("/api/v1/business-categories", v1.businessCategoryRoutes);
 app.use("/api/v1/categories", v1.categoriesRoutes);
 app.use("/api/v1/orders", v1.orderRoutes);
 app.use("/api/v1/products", v1.productRoutes);
+app.use("/api/v1/reviews", v1.reviewRoutes);
 app.use("/api/v1/sellers", v1.sellerRoutes);
 app.use("/api/v1/users", v1.userRoutes);
 app.use("/api/v1/wishlists", v1.wishlistRoutes);
