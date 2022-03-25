@@ -20,13 +20,24 @@ const ProductSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    quantity: {
+    stock: {
       type: Number,
       default: 0,
     },
-    unit: {
-      type: String,
+    ratings: {
+      type: Number,
+      default: 0,
     },
+    noOfReviews: {
+      type: Number,
+      default: 0,
+    },
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
