@@ -12,10 +12,18 @@ const ProductSchema = mongoose.Schema(
       trim: true,
       required: true,
     },
-    image: {
-      type: String,
-      required: true,
-    },
+    photos: [
+      {
+        key: {
+          type: String,
+          required: true,
+        },
+        url: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     price: {
       type: Number,
       required: true,
