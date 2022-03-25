@@ -15,16 +15,16 @@ const s3 = new S3({
   secretAccessKey,
 });
 
-const uploadFile = (file, upload_to) => {
-  const extension = path.extname(file.originalname);
+const uploadFile = (file, uploadTo) => {
+  const extension = path.extname(file.name);
   const timestamp = new Date().getTime();
-  const fileName = upload_to
-    ? upload_to + timestamp + extension
-    : timestamp + extension;
+  const fileName = uploadTo
+    ? `${uploadTo}/${timestamp}${extension}`
+    : `${timestamp}${extension}`;
 
   const uploadParams = {
     Bucket: bucketName,
-    Body: file.buffer,
+    Body: file.data,
     Key: fileName,
   };
 
