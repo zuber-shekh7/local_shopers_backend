@@ -60,6 +60,27 @@ const createProduct = asyncHandler(async (req, res) => {
   });
 });
 
+const getProducts = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
+  }
+
+  const categoryId = req.query.categoryId;
+
+  if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+    return res.status(400).json({
+      message: "Invalid category id",
+    });
+  }
+
+  const products = await Product.find({ category: categoryId });
+
+  return res.status(200).json({ products });
+});
+
 const getProduct = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
@@ -168,4 +189,4 @@ const deleteProduct = asyncHandler(async (req, res) => {
   });
 });
 
-export { createProduct, getProduct, editProduct, deleteProduct };
+export { createProduct, getProduct, getProducts, editProduct, deleteProduct };

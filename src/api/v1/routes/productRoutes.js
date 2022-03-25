@@ -1,11 +1,12 @@
 import express from "express";
 import multer from "multer";
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 import {
   createProduct,
   deleteProduct,
   editProduct,
   getProduct,
+  getProducts,
 } from "../controllers/productControllers.js";
 import {
   allowSellerOnly,
@@ -31,8 +32,24 @@ router.post(
 );
 
 router.get(
+  "/",
+  [
+    query("categoryId")
+      .notEmpty()
+      .withMessage("productId cannot be an empty field")
+      .isString(),
+  ],
+  getProducts
+);
+
+router.get(
   "/:productId",
-  [param("productId").exists().notEmpty().isString()],
+  [
+    param("productId")
+      .notEmpty()
+      .withMessage("productId cannot be an empty")
+      .isString(),
+  ],
   getProduct
 );
 
