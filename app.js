@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import colors from "colors";
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
@@ -40,6 +41,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(fileUpload());
 
 // routes
 app.use("/api/docs/v1", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
