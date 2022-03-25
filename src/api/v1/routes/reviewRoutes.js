@@ -1,6 +1,7 @@
 import express from "express";
 import { query } from "express-validator";
-import { getReviews } from "../controllers/reviewController.js";
+import { addReview, getReviews } from "../controllers/reviewController.js";
+import { authenticate } from "../middlewares/authMiddlewares.js";
 
 const router = express.Router();
 
@@ -15,5 +16,7 @@ router.get(
   ],
   getReviews
 );
+
+router.post("/", [authenticate], addReview);
 
 export default router;
