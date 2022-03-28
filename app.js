@@ -18,6 +18,11 @@ import { notFoundMiddleware } from "./src/api/v1/middlewares/notFoundMiddleware.
 const app = express();
 dotenv.config();
 const swaggerDocument = YAML.load("./src/api/v1/swagger/documentation.yaml");
+const corsOptions = {
+  origin: true,
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
 
 // database connection
 try {
@@ -34,13 +39,7 @@ if (process.env.NODE_ENV !== "production") {
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: process.env.ORIGIN,
-    preflightContinue: true,
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
 app.use(fileUpload());
 
 // routes
