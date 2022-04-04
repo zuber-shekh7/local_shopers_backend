@@ -56,11 +56,12 @@ router.post(
   "/change-password",
   [
     authenticate,
-    body("email")
+    body("oldPassword")
       .notEmpty()
-      .withMessage("email cannot be an empty field.")
-      .isEmail()
-      .withMessage("email is invalid, enter valid email."),
+      .withMessage("old password cannot be an empty field."),
+    body("newPassword")
+      .notEmpty()
+      .withMessage("new password cannot be an empty field."),
   ],
   changePassword
 );
