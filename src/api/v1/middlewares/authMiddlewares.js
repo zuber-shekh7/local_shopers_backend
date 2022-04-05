@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
 
 const authenticate = (req, res, next) => {
-  let token = req.cookies.token;
+  let token =
+    req.cookies.token ||
+    (req.headers.authorization &&
+      req.headers.authorization.replace("Bearer ", ""));
 
   // validating bearer token
   if (!token) {
@@ -21,7 +24,10 @@ const authenticate = (req, res, next) => {
 };
 
 const authenticateSeller = (req, res, next) => {
-  let token = req.cookies.token;
+  let token =
+    req.cookies.token ||
+    (req.headers.authorization &&
+      req.headers.authorization.replace("Bearer ", ""));
 
   // validating bearer token
   if (!token) {
@@ -41,7 +47,10 @@ const authenticateSeller = (req, res, next) => {
 };
 
 const authenticateAdmin = (req, res, next) => {
-  let token = req.cookies.token;
+  let token =
+    req.cookies.token ||
+    (req.headers.authorization &&
+      req.headers.authorization.replace("Bearer ", ""));
 
   // validating bearer token
   if (!token) {
