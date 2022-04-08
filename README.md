@@ -1,8 +1,11 @@
 <!-- INTRO -->
 <br/>
-<h1 align="center">Local Shoppers</h1>
-<p align="center">Online Store for locals, by locals</p>
-
+<!-- LOGO -->
+<p align="center">
+<img src="https://local-shoppers-dev.s3.ap-south-1.amazonaws.com/logo/Local+Shopers.png" alt="Local Shopers Logo" height=200 width=auto>
+</p>
+<!-- TITLE -->
+<h1 align="center">Local Shopers</h1>
 <p align="center">Local Shoppers is an e-commerce website for users to buy daily household products from the local vendors</p>
 
 <!-- TABLE OF CONTENTS -->
@@ -14,6 +17,7 @@
 2. [Installation](#installation)
 3. [Technology Stack](#technology-stack)
 4. [Authors](#authors)
+5. [License](#license)
 
 <br/>
 
@@ -79,3 +83,9 @@ FORGOT_PASSWORD_LINK=<br/>
 
 - [Zuber Shekh](https://github.com/zuber-shekh7)
 - [Shubham Garg](https://github.com/shbhm6496)
+
+<br/>
+
+# License
+
+[MIT](https://opensource.org/licenses/MIT)
