@@ -15,7 +15,7 @@ const s3 = new S3({
   secretAccessKey,
 });
 
-const uploadFile = (file, uploadTo) => {
+export const uploadFile = (file, uploadTo) => {
   const extension = path.extname(file.name);
   const timestamp = new Date().getTime();
   const fileName = uploadTo
@@ -31,4 +31,11 @@ const uploadFile = (file, uploadTo) => {
   return s3.upload(uploadParams).promise();
 };
 
-export { uploadFile };
+export const deleteFile = (key) => {
+  const options = {
+    Bucket: bucketName,
+    Key: key,
+  };
+
+  return s3.deleteObject(options).promise();
+};
