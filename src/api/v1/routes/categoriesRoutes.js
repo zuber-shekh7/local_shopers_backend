@@ -31,9 +31,16 @@ router.post(
   [
     authenticateSeller,
     allowSellerOnly,
-    upload.single("image"),
-    body("businessId").exists().notEmpty().isString(),
-    body("name").exists().notEmpty().isString(),
+    body("businessId")
+      .notEmpty()
+      .withMessage("businessId cannot be an empty field")
+      .isString()
+      .withMessage("businessId must be a string value"),
+    body("name")
+      .notEmpty()
+      .withMessage("name cannot be an empty field")
+      .isString()
+      .withMessage("name must be a string value"),
   ],
   createCategory
 );
@@ -46,7 +53,15 @@ router.get(
 
 router.put(
   "/:categoryId",
-  [authenticateSeller, allowSellerOnly, upload.single("image")],
+  [
+    authenticateSeller,
+    allowSellerOnly,
+    body("name")
+      .notEmpty()
+      .withMessage("name cannot be an empty field")
+      .isString()
+      .withMessage("name must be a string value"),
+  ],
   updateCategory
 );
 

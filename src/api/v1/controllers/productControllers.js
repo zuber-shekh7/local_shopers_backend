@@ -133,7 +133,6 @@ const editProduct = asyncHandler(async (req, res) => {
     if (req.files) {
       // deleting existing phtos
       for (let photo of product.photos) {
-        console.log("deleting old files");
         await deleteFile(photo.key);
       }
       // uploading new photos

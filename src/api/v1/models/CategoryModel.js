@@ -7,9 +7,15 @@ const CategorySchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    image: {
-      type: String,
-      required: true,
+    photo: {
+      key: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
     },
     business: {
       type: mongoose.Schema.Types.ObjectId,
