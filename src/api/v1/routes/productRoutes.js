@@ -72,8 +72,22 @@ router.put(
   [
     authenticateSeller,
     allowSellerOnly,
-    upload.single("image"),
-    param("productId").exists().notEmpty().isString(),
+    body("name")
+      .notEmpty()
+      .withMessage("name cannot be an empty field")
+      .isString(),
+    body("description")
+      .notEmpty()
+      .withMessage("description cannot be an empty field")
+      .isString(),
+    body("price")
+      .notEmpty()
+      .withMessage("price cannot be an empty field")
+      .isDecimal(),
+    body("stock")
+      .notEmpty()
+      .withMessage("stock cannot be an empty field")
+      .isDecimal(),
   ],
   editProduct
 );

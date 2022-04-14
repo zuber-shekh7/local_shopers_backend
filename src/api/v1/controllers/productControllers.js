@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import Category from "../models/CategoryModel.js";
 import Product from "../models/ProductModel.js";
-import { uploadFile } from "../config/s3.js";
+import { deleteFile, uploadFile } from "../config/s3.js";
 
 const createProduct = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -127,30 +127,32 @@ const editProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(productId);
 
   if (product) {
-    const name = req.body.name || product.name;
-    const description = req.body.description || product.description;
-    const price = req.body.price || product.price;
-    const quantity = req.body.quantity;
-    const unit = req.body.unit;
+    const { name, description, price, stock } = req.body;
 
-    let image;
-    if (req.file) {
-      // uploading image to s3
-      const file = req.file;
-      const { Location } = await uploadFile(file);
-      image = Location;
+    let photos = [];
+    if (req.files) {
+      // deleting existing phtos
+      for (let photo of product.photos) {
+        console.log("deleting old files");
+        await deleteFile(photo.key);
+      }
+      // uploading new photos
+      const { Key, Location } = await uploadFile(req.files.photos, "photos");
+      photos.push({ url: Location, key: Key });
     } else {
-      image = product.image;
+      photos = product.photos;
     }
 
-    product.name = name;
-    product.description = description;
-    product.quantity = quantity;
-    product.price = price;
-    product.image = image;
-    product.unit = unit;
-
-    await product.save();
+    await Product.updateOne(
+      { _id: productId },
+      {
+        name,
+        description,
+        price,
+        stock,
+        photos,
+      }
+    );
 
     return res.status(200).json({ product });
   }
