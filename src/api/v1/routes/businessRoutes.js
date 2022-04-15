@@ -20,7 +20,6 @@ router.post(
   [
     authenticateSeller,
     allowSellerOnly,
-    upload.single("image"),
     body("name").notEmpty().withMessage("name cannot be empty").isString(),
     body("description")
       .notEmpty()

@@ -57,21 +57,24 @@ const createBusiness = asyncHandler(async (req, res) => {
     });
   }
 
-  const file = req.file;
-  if (!file) {
+  if (!req.files.photo) {
     return res.status(400).json({
-      message: "Image field required",
+      message: "Photo is required field",
     });
   }
 
   // uploading image to s3
-  const { Location: image } = await uploadFile(file);
+  const { Key, Location } = await uploadFile(req.files.photo);
+  const photo = {
+    key: Key,
+    url: Location,
+  };
 
   const business = await Business.create({
     name,
     description,
     category,
-    image,
+    photo,
   });
 
   seller.business = business._id;
