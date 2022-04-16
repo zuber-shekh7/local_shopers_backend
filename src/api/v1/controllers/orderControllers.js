@@ -143,20 +143,23 @@ const getOrder = asyncHandler(async (req, res) => {
 });
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { order_id } = req.params;
+  const { orderId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(order_id)) {
+  if (!mongoose.Types.ObjectId.isValid(orderId)) {
     return res.status(400).json({
       message: "Invalid order id",
     });
   }
 
-  const order = await Order.findById(order_id).populate("orderItems");
+  const order = await Order.findById(orderId).populate("orderItems");
 
   if (order) {
     const { status } = req.body;
 
-    const updatedOrder = await Order.findByIdAndUpdate(order_id, { status });
+    const updatedOrder = await Order.findByIdAndUpdate(
+      { _id: orderId },
+      { status }
+    );
 
     return res.json({
       order: updatedOrder,

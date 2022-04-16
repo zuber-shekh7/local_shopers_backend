@@ -18,7 +18,7 @@ router.get("/", [authenticate], getUserOrders);
 router.get("/seller/", [authenticateSeller], getSellerOrders);
 router.get("/:order_id", [authenticate], getOrder);
 router.put(
-  "/:order_id",
+  "/:orderId",
   [authenticateSeller, body("status").exists().notEmpty().isString()],
   updateOrderStatus
 );
