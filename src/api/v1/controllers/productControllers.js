@@ -30,7 +30,16 @@ const createProduct = asyncHandler(async (req, res) => {
   const category = await Category.findById(categoryId);
 
   if (category) {
-    const { name, description, price, stock } = req.body;
+    const {
+      name,
+      description,
+      price,
+      discountPrice,
+      discount,
+      qty,
+      unit,
+      stock,
+    } = req.body;
 
     // uploading image to s3
     const { Key, Location } = await uploadFile(req.files.photos, "photos");
@@ -39,6 +48,10 @@ const createProduct = asyncHandler(async (req, res) => {
       name,
       description,
       price,
+      discountPrice,
+      discount,
+      qty,
+      unit,
       stock,
       photos: {
         key: Key,
