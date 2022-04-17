@@ -140,7 +140,16 @@ const editProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(productId);
 
   if (product) {
-    const { name, description, price, stock } = req.body;
+    const {
+      name,
+      description,
+      price,
+      discountPrice,
+      discount,
+      qty,
+      unit,
+      stock,
+    } = req.body;
 
     let photos = [];
     if (req.files) {
@@ -161,6 +170,10 @@ const editProduct = asyncHandler(async (req, res) => {
         name,
         description,
         price,
+        discountPrice,
+        discount,
+        qty,
+        unit,
         stock,
         photos,
       }
