@@ -62,13 +62,13 @@ const createOrder = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const {
-    user_id,
-    business_id,
+    userId,
+    businessId,
     orderItems,
     shippingAddress,
     paymentMethod,
@@ -77,20 +77,20 @@ const createOrder = asyncHandler(async (req, res) => {
     totalPrice,
   } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(user_id)) {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
       message: "Invalid user id",
     });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(business_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessId)) {
     return res.status(400).json({
       message: "Invalid business id",
     });
   }
 
-  const user = await User.findById(user_id);
-  const business = await Business.findById(business_id);
+  const user = await User.findById(userId);
+  const business = await Business.findById(businessId);
 
   if (!user) {
     return res.status(400).json({

@@ -27,14 +27,38 @@ router.post(
   "",
   [
     authenticate,
-    body("user_id").exists().notEmpty().isString(),
-    body("business_id").exists().notEmpty().isString(),
-    body("orderItems").exists().notEmpty().isArray(),
-    body("shippingAddress").exists().notEmpty().isObject(),
-    body("paymentMethod").exists().notEmpty().isString(),
-    body("tax").exists().notEmpty().isNumeric(),
-    body("shippingCharges").exists().notEmpty().isNumeric(),
-    body("totalPrice").exists().notEmpty().isNumeric(),
+    body("userId")
+      .notEmpty()
+      .withMessage("userId cannot be an empty field")
+      .isString(),
+    body("businessId")
+      .notEmpty()
+      .withMessage("businessID cannot be an empty field")
+      .isString(),
+    body("orderItems")
+      .notEmpty()
+      .withMessage("orderItems cannot be an empty array")
+      .isArray(),
+    body("shippingAddress")
+      .notEmpty()
+      .withMessage("shippingAddress cannot be an empty object")
+      .isObject(),
+    body("paymentMethod")
+      .notEmpty()
+      .withMessage("paymentMethod cannot be an empty field")
+      .isString(),
+    body("tax")
+      .notEmpty()
+      .withMessage("tex cannot be an empty field")
+      .isNumeric(),
+    body("shippingCharges")
+      .notEmpty()
+      .withMessage("shippingCharges cannot be an empty field")
+      .isNumeric(),
+    body("totalPrice")
+      .notEmpty()
+      .withMessage("totalPrice cannot be an empty field")
+      .isNumeric(),
   ],
   createOrder
 );
