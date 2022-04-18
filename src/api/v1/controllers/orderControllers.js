@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
+import Razorpay from "razorpay";
+import crypto from "crypto";
 import { validationResult } from "express-validator";
 import User from "../models/UserModel.js";
 import Business from "../models/BusinessModel.js";
@@ -70,11 +72,12 @@ const createOrder = asyncHandler(async (req, res) => {
     userId,
     businessId,
     orderItems,
-    shippingAddress,
+    shippingInfo,
+    paymentInfo,
     paymentMethod,
-    tax,
-    shippingCharges,
-    totalPrice,
+    taxAmount,
+    shippingAmount,
+    totalAmount,
   } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -104,15 +107,31 @@ const createOrder = asyncHandler(async (req, res) => {
     });
   }
 
+  const instance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY,
+    key_secret: process.env.RAZORPAY_SECRET,
+  });
+
+  const razorpayOrder = await instance.orders.create({
+    amount: totalAmount * 100,
+    currency: "INR",
+    receipt: crypto.randomBytes(20).toString("hex"),
+  });
+
   const order = await Order.create({
+    paymentInfo: {
+      ...paymentInfo,
+      paymentId: razorpayOrder.id,
+      receipt: razorpayOrder.receipt,
+    },
     user,
     business,
     orderItems,
-    shippingAddress,
+    shippingInfo,
     paymentMethod,
-    tax,
-    shippingCharges,
-    totalPrice,
+    taxAmount,
+    shippingAmount,
+    totalAmount,
   });
 
   return res.json({
@@ -129,7 +148,9 @@ const getOrder = asyncHandler(async (req, res) => {
     });
   }
 
-  const order = await Order.findById(order_id).populate("orderItems");
+  const order = await Order.findById(order_id)
+    .populate("orderItems")
+    .populate("user");
 
   if (order) {
     return res.json({
@@ -154,11 +175,12 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   const order = await Order.findById(orderId).populate("orderItems");
 
   if (order) {
-    const { status } = req.body;
-
+    const { status, paymentInfo } = req.body;
+    console.log(req.body);
+    console.log(paymentInfo.status);
     const updatedOrder = await Order.findByIdAndUpdate(
       { _id: orderId },
-      { status }
+      { status, paymentInfo }
     );
 
     return res.json({

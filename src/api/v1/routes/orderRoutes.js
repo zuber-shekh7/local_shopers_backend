@@ -39,7 +39,7 @@ router.post(
       .notEmpty()
       .withMessage("orderItems cannot be an empty array")
       .isArray(),
-    body("shippingAddress")
+    body("shippingInfo")
       .notEmpty()
       .withMessage("shippingAddress cannot be an empty object")
       .isObject(),
@@ -47,17 +47,21 @@ router.post(
       .notEmpty()
       .withMessage("paymentMethod cannot be an empty field")
       .isString(),
-    body("tax")
+    body("paymentInfo")
       .notEmpty()
-      .withMessage("tex cannot be an empty field")
+      .withMessage("paymentInfo cannot be an empty object")
+      .isObject(),
+    body("taxAmount")
+      .notEmpty()
+      .withMessage("taxAmount cannot be an empty field")
       .isNumeric(),
-    body("shippingCharges")
+    body("shippingAmount")
       .notEmpty()
-      .withMessage("shippingCharges cannot be an empty field")
+      .withMessage("shippingAmount cannot be an empty field")
       .isNumeric(),
-    body("totalPrice")
+    body("totalAmount")
       .notEmpty()
-      .withMessage("totalPrice cannot be an empty field")
+      .withMessage("totalAmount cannot be an empty field")
       .isNumeric(),
   ],
   createOrder

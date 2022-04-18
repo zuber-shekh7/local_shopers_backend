@@ -23,9 +23,23 @@ const OrderSchema = mongoose.Schema(
           type: Number,
           required: true,
         },
+        discountPrice: {
+          type: Number,
+          required: true,
+        },
+        discount: {
+          type: Number,
+          required: true,
+        },
         qty: {
           type: Number,
           required: true,
+          default: 1,
+        },
+        unit: {
+          type: String,
+          required: true,
+          trim: true,
         },
         photo: {
           type: String,
@@ -38,7 +52,7 @@ const OrderSchema = mongoose.Schema(
         },
       },
     ],
-    shippingAddress: {
+    shippingInfo: {
       fullName: {
         type: String,
         required: true,
@@ -74,28 +88,37 @@ const OrderSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    tax: {
+    paymentInfo: {
+      paymentId: {
+        type: String,
+      },
+      status: {
+        type: String,
+        required: true,
+      },
+      receipt: {
+        type: String,
+      },
+      paidAt: {
+        type: Date,
+      },
+    },
+    taxAmount: {
       type: Number,
       required: true,
     },
-    shippingCharges: {
+    shippingAmount: {
       type: Number,
       required: true,
     },
-    totalPrice: {
+    totalAmount: {
       type: Number,
       required: true,
     },
     status: {
       type: String,
       required: true,
-      default: "PENDING",
-    },
-    paymentDetails: {
-      id: { type: String },
-      status: { type: String },
-      updatedAt: { type: String },
-      email: { type: String },
+      default: "Processing",
     },
   },
   {
