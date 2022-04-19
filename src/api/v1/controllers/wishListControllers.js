@@ -26,9 +26,12 @@ const getWishList = asyncHandler(async (req, res) => {
   if (user) {
     if (user.wishList) {
       return res.json({
-        wishList: await WishList.findById(user.wishList._id).populate(
-          "products"
-        ),
+        wishList: await WishList.findById(user.wishList._id).populate({
+          path: "products",
+          populate: {
+            path: "category",
+          },
+        }),
       });
     }
 
