@@ -16,6 +16,23 @@ const SellerSchema = mongoose.Schema(
       unique: true,
       sparse: true,
     },
+    profile: {
+      firstName: {
+        type: String,
+        trim: true,
+      },
+      lastName: {
+        type: String,
+        trim: true,
+      },
+      gender: {
+        type: String,
+        trim: true,
+      },
+      dob: {
+        type: Date,
+      },
+    },
     business: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Business",

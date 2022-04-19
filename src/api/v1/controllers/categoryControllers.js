@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import Business from "../models/BusinessModel.js";
 import Category from "../models/CategoryModel.js";
-import { uploadFile } from "../config/s3.js";
+import { deleteFile, uploadFile } from "../config/s3.js";
 
 const getCategories = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -53,21 +53,23 @@ const createCategory = asyncHandler(async (req, res) => {
   const business = await Business.findById(businessId);
 
   if (business) {
-    const name = req.body.name;
+    const { name } = req.body;
 
-    const file = req.file;
-    if (!file) {
+    if (!req.files) {
       return res.status(400).json({
-        message: "Image field required",
+        message: "Photo field required",
       });
     }
 
-    // uploading image to s3
-    const { Location: image } = await uploadFile(file);
+    // uploading photos to s3
+    const { Key, Location } = await uploadFile(req.files.photo);
 
     const category = await Category.create({
       name,
-      image,
+      photo: {
+        url: Location,
+        key: Key,
+      },
     });
 
     business.categories.push(category);
@@ -134,22 +136,26 @@ const updateCategory = asyncHandler(async (req, res) => {
   const category = await Category.findById(categoryId);
 
   if (category) {
-    let image;
-    if (req.file) {
-      // uploading image to s3
-      const file = req.file;
-      const { Location } = await uploadFile(file);
-      image = Location;
+    let photo;
+    if (req.files) {
+      // deleting existing photo from s3
+      await deleteFile(category.photo.key);
+      // uploading photo to s3
+      const { Key, Location } = await uploadFile(req.files.photo);
+      photo = { url: Location, key: Key };
     } else {
-      image = category.image;
+      photo = category.photo;
     }
 
-    const name = req.body.name || category.name;
+    const { name } = req.body;
 
-    category.name = name;
-    category.image = image;
-
-    await category.save();
+    await Category.updateOne(
+      { _id: category._id },
+      {
+        name,
+        photo,
+      }
+    );
 
     return res.status(200).json({ category });
   }
@@ -178,6 +184,9 @@ const deleteCategory = asyncHandler(async (req, res) => {
   const category = await Category.findByIdAndDelete(categoryId);
 
   if (category) {
+    // deleting photos from s3;
+    await deleteFile(category.photo.key);
+
     return res.status(200).json({ message: "Category deleted successfully" });
   }
 

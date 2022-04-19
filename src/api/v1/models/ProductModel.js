@@ -28,9 +28,31 @@ const ProductSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    discountPrice: {
+      type: Number,
+      required: true,
+    },
+    discount: {
+      type: Number,
+      required: true,
+    },
+    qty: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
+    unit: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     stock: {
       type: Number,
       default: 0,
+    },
+    isBestSeller: {
+      type: Boolean,
+      default: true,
     },
     ratings: {
       type: Number,

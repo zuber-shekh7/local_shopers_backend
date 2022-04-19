@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import { validationResult } from "express-validator";
 import Category from "../models/CategoryModel.js";
 import Product from "../models/ProductModel.js";
-import { uploadFile } from "../config/s3.js";
+import { deleteFile, uploadFile } from "../config/s3.js";
 
 const createProduct = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -30,7 +30,16 @@ const createProduct = asyncHandler(async (req, res) => {
   const category = await Category.findById(categoryId);
 
   if (category) {
-    const { name, description, price, stock } = req.body;
+    const {
+      name,
+      description,
+      price,
+      discountPrice,
+      discount,
+      qty,
+      unit,
+      stock,
+    } = req.body;
 
     // uploading image to s3
     const { Key, Location } = await uploadFile(req.files.photos, "photos");
@@ -39,6 +48,10 @@ const createProduct = asyncHandler(async (req, res) => {
       name,
       description,
       price,
+      discountPrice,
+      discount,
+      qty,
+      unit,
       stock,
       photos: {
         key: Key,
@@ -127,30 +140,44 @@ const editProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(productId);
 
   if (product) {
-    const name = req.body.name || product.name;
-    const description = req.body.description || product.description;
-    const price = req.body.price || product.price;
-    const quantity = req.body.quantity;
-    const unit = req.body.unit;
+    const {
+      name,
+      description,
+      price,
+      discountPrice,
+      discount,
+      qty,
+      unit,
+      stock,
+    } = req.body;
 
-    let image;
-    if (req.file) {
-      // uploading image to s3
-      const file = req.file;
-      const { Location } = await uploadFile(file);
-      image = Location;
+    let photos = [];
+    if (req.files) {
+      // deleting existing phtos
+      for (let photo of product.photos) {
+        await deleteFile(photo.key);
+      }
+      // uploading new photos
+      const { Key, Location } = await uploadFile(req.files.photos, "photos");
+      photos.push({ url: Location, key: Key });
     } else {
-      image = product.image;
+      photos = product.photos;
     }
 
-    product.name = name;
-    product.description = description;
-    product.quantity = quantity;
-    product.price = price;
-    product.image = image;
-    product.unit = unit;
-
-    await product.save();
+    await Product.updateOne(
+      { _id: productId },
+      {
+        name,
+        description,
+        price,
+        discountPrice,
+        discount,
+        qty,
+        unit,
+        stock,
+        photos,
+      }
+    );
 
     return res.status(200).json({ product });
   }

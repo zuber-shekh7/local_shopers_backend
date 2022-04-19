@@ -36,11 +36,33 @@ router.post(
     body("price")
       .notEmpty()
       .withMessage("price cannot be an empty field")
-      .isDecimal(),
+      .isDecimal()
+      .withMessage("price must be a numeric value"),
+    body("discountPrice")
+      .notEmpty()
+      .withMessage("discountPrice cannot be an empty field")
+      .isDecimal()
+      .withMessage("discountPrice must be a numeric value"),
+    body("discount")
+      .notEmpty()
+      .withMessage("discount cannot be an empty field")
+      .isDecimal()
+      .withMessage("discount must be a numeric value"),
+    body("qty")
+      .notEmpty()
+      .withMessage("qty cannot be an empty field")
+      .isDecimal()
+      .withMessage("qty must be a numeric value"),
+    body("unit")
+      .notEmpty()
+      .withMessage("unit cannot be an empty field")
+      .isString()
+      .withMessage("unit must be a string value"),
     body("stock")
       .notEmpty()
       .withMessage("stock cannot be an empty field")
-      .isDecimal(),
+      .isDecimal()
+      .withMessage("stock must be a numeric value"),
   ],
   createProduct
 );
@@ -72,8 +94,44 @@ router.put(
   [
     authenticateSeller,
     allowSellerOnly,
-    upload.single("image"),
-    param("productId").exists().notEmpty().isString(),
+    body("name")
+      .notEmpty()
+      .withMessage("name cannot be an empty field")
+      .isString(),
+    body("description")
+      .notEmpty()
+      .withMessage("description cannot be an empty field")
+      .isString(),
+    body("price")
+      .notEmpty()
+      .withMessage("price cannot be an empty field")
+      .isDecimal()
+      .withMessage("price must be a numeric value"),
+    body("discountPrice")
+      .notEmpty()
+      .withMessage("discountPrice cannot be an empty field")
+      .isDecimal()
+      .withMessage("discountPrice must be a numeric value"),
+    body("discount")
+      .notEmpty()
+      .withMessage("discount cannot be an empty field")
+      .isDecimal()
+      .withMessage("discount must be a numeric value"),
+    body("qty")
+      .notEmpty()
+      .withMessage("qty cannot be an empty field")
+      .isDecimal()
+      .withMessage("qty must be a numeric value"),
+    body("unit")
+      .notEmpty()
+      .withMessage("unit cannot be an empty field")
+      .isString()
+      .withMessage("unit must be a string value"),
+    body("stock")
+      .notEmpty()
+      .withMessage("stock cannot be an empty field")
+      .isDecimal()
+      .withMessage("stock must be a numeric value"),
   ],
   editProduct
 );

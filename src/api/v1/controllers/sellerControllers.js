@@ -192,12 +192,14 @@ const updateSeller = asyncHandler(async (req, res) => {
   const seller = await Seller.findById(id).select("-password");
 
   if (seller) {
-    seller.firstName = req.body.firstName || seller.firstName;
-    seller.lastName = req.body.lastName || seller.lastName;
-    seller.email = req.body.email || seller.email;
-    seller.mobile = req.body.mobile || seller.mobile;
+    const { firstName, lastName, email, mobile } = req.body;
 
-    await seller.save();
+    const profile = {
+      firstName,
+      lastName,
+    };
+
+    await Seller.updateOne({ _id: id }, { email, mobile, profile });
 
     return res.json({
       seller,

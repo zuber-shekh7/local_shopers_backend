@@ -4,7 +4,7 @@ import BusinessCategory from "../models/BusinessCategoryModel.js";
 import Business from "../models/BusinessModel.js";
 import mongoose from "mongoose";
 import Seller from "../models/SellerModel.js";
-import { uploadFile } from "../config/s3.js";
+import { deleteFile, uploadFile } from "../config/s3.js";
 
 const createBusiness = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
@@ -57,21 +57,24 @@ const createBusiness = asyncHandler(async (req, res) => {
     });
   }
 
-  const file = req.file;
-  if (!file) {
+  if (!req.files.photo) {
     return res.status(400).json({
-      message: "Image field required",
+      message: "Photo is required field",
     });
   }
 
   // uploading image to s3
-  const { Location: image } = await uploadFile(file);
+  const { Key, Location } = await uploadFile(req.files.photo);
+  const photo = {
+    key: Key,
+    url: Location,
+  };
 
   const business = await Business.create({
     name,
     description,
     category,
-    image,
+    photo,
   });
 
   seller.business = business._id;
@@ -118,8 +121,8 @@ const updateBusiness = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const businessId = req.params.businessId;
@@ -127,26 +130,34 @@ const updateBusiness = asyncHandler(async (req, res) => {
   const business = await Business.findById(businessId);
 
   if (business) {
-    const name = req.body.name || business.name;
-    const description = req.body.description || business.description;
-    const category = req.body.categoryId || business.category;
+    const { name, description, businessCategoryId: category } = req.body;
 
-    let image;
-    if (req.file) {
+    let photo;
+    if (req.files) {
+      // delete existing file
+      if (business.photo.key) {
+        await deleteFile(business.photo.key);
+      }
       // uploading image to s3
-      const file = req.file;
-      const { Location } = await uploadFile(file);
-      image = Location;
+      const { Key, Location } = await uploadFile(req.files.photo);
+
+      photo = {
+        key: Key,
+        url: Location,
+      };
     } else {
-      image = business.image;
+      photo = business.photo;
     }
 
-    business.name = name;
-    business.description = description;
-    business.category = category;
-    business.image = image;
-
-    await business.save();
+    await Business.updateOne(
+      { _id: businessId },
+      {
+        name,
+        description,
+        category,
+        photo,
+      }
+    );
 
     return res.json({ business });
   }

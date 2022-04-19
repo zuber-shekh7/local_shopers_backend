@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
+import Razorpay from "razorpay";
+import crypto from "crypto";
 import { validationResult } from "express-validator";
 import User from "../models/UserModel.js";
 import Business from "../models/BusinessModel.js";
@@ -62,35 +64,36 @@ const createOrder = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400);
-    return res.json({ errors: errors.array() });
+    const { msg } = errors.array()[0];
+    return res.status(400).json({ error: msg });
   }
 
   const {
-    user_id,
-    business_id,
+    userId,
+    businessId,
     orderItems,
-    shippingAddress,
+    shippingInfo,
+    paymentInfo,
     paymentMethod,
-    tax,
-    shippingCharges,
-    totalPrice,
+    taxAmount,
+    shippingAmount,
+    totalAmount,
   } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(user_id)) {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
       message: "Invalid user id",
     });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(business_id)) {
+  if (!mongoose.Types.ObjectId.isValid(businessId)) {
     return res.status(400).json({
       message: "Invalid business id",
     });
   }
 
-  const user = await User.findById(user_id);
-  const business = await Business.findById(business_id);
+  const user = await User.findById(userId);
+  const business = await Business.findById(businessId);
 
   if (!user) {
     return res.status(400).json({
@@ -104,15 +107,31 @@ const createOrder = asyncHandler(async (req, res) => {
     });
   }
 
+  const instance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY,
+    key_secret: process.env.RAZORPAY_SECRET,
+  });
+
+  const razorpayOrder = await instance.orders.create({
+    amount: totalAmount * 100,
+    currency: "INR",
+    receipt: crypto.randomBytes(20).toString("hex"),
+  });
+
   const order = await Order.create({
+    paymentInfo: {
+      ...paymentInfo,
+      paymentId: razorpayOrder.id,
+      receipt: razorpayOrder.receipt,
+    },
     user,
     business,
     orderItems,
-    shippingAddress,
+    shippingInfo,
     paymentMethod,
-    tax,
-    shippingCharges,
-    totalPrice,
+    taxAmount,
+    shippingAmount,
+    totalAmount,
   });
 
   return res.json({
@@ -129,7 +148,9 @@ const getOrder = asyncHandler(async (req, res) => {
     });
   }
 
-  const order = await Order.findById(order_id).populate("orderItems");
+  const order = await Order.findById(order_id)
+    .populate("orderItems")
+    .populate("user");
 
   if (order) {
     return res.json({
@@ -143,20 +164,24 @@ const getOrder = asyncHandler(async (req, res) => {
 });
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { order_id } = req.params;
+  const { orderId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(order_id)) {
+  if (!mongoose.Types.ObjectId.isValid(orderId)) {
     return res.status(400).json({
       message: "Invalid order id",
     });
   }
 
-  const order = await Order.findById(order_id).populate("orderItems");
+  const order = await Order.findById(orderId).populate("orderItems");
 
   if (order) {
-    const { status } = req.body;
-
-    const updatedOrder = await Order.findByIdAndUpdate(order_id, { status });
+    const { status, paymentInfo } = req.body;
+    console.log(req.body);
+    console.log(paymentInfo.status);
+    const updatedOrder = await Order.findByIdAndUpdate(
+      { _id: orderId },
+      { status, paymentInfo }
+    );
 
     return res.json({
       order: updatedOrder,
